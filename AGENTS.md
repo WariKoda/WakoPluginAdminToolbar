@@ -114,6 +114,7 @@ When adding a new action, endpoint, admin route, or toolbar button:
 - Every new privileged feature must integrate with Shopware ACL/privileges end-to-end: admin privilege registration, backend enforcement, and UI gating
 - Reuse core privileges where possible; only add plugin-specific privileges when no suitable core privilege exists
 - Keep `src/Resources/app/storefront/dist/` in sync with storefront source changes when shipping a release
+- In PHP method/function parameter defaults, prefer scalar literals over framework constants when IDEs or static analysis may misinfer the type (e.g. use `int $status = 200` instead of `Response::HTTP_OK`)
 
 ## Build & Development
 
