@@ -4,9 +4,15 @@ Shopware 6 storefront plugin that shows a fixed administration toolbar at the to
 
 ## Screenshots
 
+### Screenshot 1
+
 ![WakoPluginAdminToolbar Screenshot 1](./docs/images/wakoAdminToolbar_001.png)
 
+### Screenshot 2 — Kontext-Button für Produkte, Varianten und Erlebniswelten
+
 ![WakoPluginAdminToolbar Screenshot 2](./docs/images/wakoAdminToolbar_002.png)
+
+### Screenshot 3 — Customer Context
 
 ![WakoPluginAdminToolbar Screenshot 3](./docs/images/wakoAdminToolbar_003.png)
 
