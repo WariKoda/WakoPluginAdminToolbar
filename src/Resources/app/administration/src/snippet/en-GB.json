@@ -1,0 +1,44 @@
+{
+    "wako-admin-toolbar": {
+        "profile": {
+            "cardTitle": "Admin Toolbar",
+            "switchLabel": "Enable Admin Toolbar",
+            "switchHelpText": "Show the storefront admin toolbar for this account.",
+            "saveSuccess": "Admin toolbar preference saved.",
+            "saveError": "Admin toolbar preference could not be saved."
+        },
+        "settings": {
+            "moduleTitle": "Admin Toolbar Settings",
+            "moduleDescription": "Manage your personal storefront admin toolbar settings.",
+            "navigationLabel": "Admin Toolbar",
+            "cardTitle": "Toolbar access",
+            "description": "Enable or disable the storefront admin toolbar for your own account. Additional feature toggles can be added here later.",
+            "statusEnabled": "Enabled",
+            "statusDisabled": "Disabled",
+            "statusEnabledNotice": "The storefront admin toolbar is currently enabled for your account.",
+            "statusDisabledNotice": "The storefront admin toolbar is currently disabled for your account.",
+            "switchHelpText": "The toolbar can only be enabled when your role includes the plugin privilege for storefront admin toolbar access.",
+            "missingPrivilegeNotice": "Your role is currently missing the permission \"Use storefront admin toolbar\". The toolbar cannot be enabled until that privilege is granted.",
+            "featuresTitle": "Available features",
+            "featuresDescription": "These placeholders prepare future per-feature toolbar preferences for your own account.",
+            "featureProductLinks": "Product edit links",
+            "featureProductLinksHelp": "Later, you will be able to show or hide product-related toolbar actions independently.",
+            "featureCategoryLinks": "Category and navigation links",
+            "featureCategoryLinksHelp": "Later, you will be able to control category-related toolbar links separately.",
+            "featureCmsLinks": "CMS and layout links",
+            "featureCmsLinksHelp": "Later, you will be able to enable or disable layout and shopping experience actions individually.",
+            "featureCustomerContext": "Customer context",
+            "featureCustomerContextHelp": "Later, you will be able to control customer info and related toolbar context separately.",
+            "featuresComingSoon": "These feature toggles are placeholders for a later release and are currently not configurable.",
+            "loadError": "Admin toolbar settings could not be loaded."
+        }
+    },
+    "sw-privileges": {
+        "additional_permissions": {
+            "wako_admin_toolbar": {
+                "label": "Wako Admin Toolbar",
+                "viewer": "Use storefront admin toolbar"
+            }
+        }
+    }
+}

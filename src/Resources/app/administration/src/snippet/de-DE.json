@@ -1,0 +1,44 @@
+{
+    "wako-admin-toolbar": {
+        "profile": {
+            "cardTitle": "Admin Toolbar",
+            "switchLabel": "Admin Toolbar aktivieren",
+            "switchHelpText": "Storefront Admin Toolbar für dieses Konto anzeigen.",
+            "saveSuccess": "Admin-Toolbar-Einstellung gespeichert.",
+            "saveError": "Admin-Toolbar-Einstellung konnte nicht gespeichert werden."
+        },
+        "settings": {
+            "moduleTitle": "Admin-Toolbar Einstellungen",
+            "moduleDescription": "Verwalten Sie Ihre persönlichen Einstellungen für die Storefront Admin Toolbar.",
+            "navigationLabel": "Admin Toolbar",
+            "cardTitle": "Toolbar-Zugriff",
+            "description": "Aktivieren oder deaktivieren Sie die Storefront Admin Toolbar für Ihr eigenes Konto. Zusätzliche Feature-Schalter können hier später ergänzt werden.",
+            "statusEnabled": "Aktiviert",
+            "statusDisabled": "Deaktiviert",
+            "statusEnabledNotice": "Die Storefront Admin Toolbar ist für Ihr Konto aktuell aktiviert.",
+            "statusDisabledNotice": "Die Storefront Admin Toolbar ist für Ihr Konto aktuell deaktiviert.",
+            "switchHelpText": "Die Toolbar kann nur aktiviert werden, wenn Ihre Rolle die Plugin-Berechtigung für den Storefront Admin Toolbar Zugriff enthält.",
+            "missingPrivilegeNotice": "Ihrer Rolle fehlt aktuell die Berechtigung \"Use storefront admin toolbar\". Die Toolbar kann erst aktiviert werden, wenn diese Berechtigung vergeben wurde.",
+            "featuresTitle": "Verfügbare Features",
+            "featuresDescription": "Diese Platzhalter bereiten zukünftige Toolbar-Einstellungen pro Feature für Ihr eigenes Konto vor.",
+            "featureProductLinks": "Produkt-Bearbeitungslinks",
+            "featureProductLinksHelp": "Später können produktbezogene Toolbar-Aktionen unabhängig ein- oder ausgeblendet werden.",
+            "featureCategoryLinks": "Kategorie- und Navigationslinks",
+            "featureCategoryLinksHelp": "Später lassen sich kategorienbezogene Toolbar-Links separat steuern.",
+            "featureCmsLinks": "CMS- und Layout-Links",
+            "featureCmsLinksHelp": "Später können Layout- und Erlebniswelt-Aktionen einzeln aktiviert oder deaktiviert werden.",
+            "featureCustomerContext": "Kundenkontext",
+            "featureCustomerContextHelp": "Später können Kundeninformationen und verwandte Toolbar-Kontexte separat gesteuert werden.",
+            "featuresComingSoon": "Diese Feature-Schalter sind Platzhalter für eine spätere Version und derzeit noch nicht konfigurierbar.",
+            "loadError": "Die Admin-Toolbar Einstellungen konnten nicht geladen werden."
+        }
+    },
+    "sw-privileges": {
+        "additional_permissions": {
+            "wako_admin_toolbar": {
+                "label": "Wako Admin Toolbar",
+                "viewer": "Storefront Admin Toolbar verwenden"
+            }
+        }
+    }
+}

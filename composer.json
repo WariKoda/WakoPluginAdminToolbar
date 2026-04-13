@@ -1,0 +1,32 @@
+{
+  "name": "wako/plugin-admin-toolbar",
+  "description": "Admin Toolbar for Shopware Storefront",
+  "type": "shopware-platform-plugin",
+  "version": "1.3.0",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "WariKoda",
+      "role": "Manufacturer"
+    },
+    {
+      "name": "Niklas Braun",
+      "role": "Lead Developer"
+    }
+  ],
+  "require": {
+    "shopware/core": "~6.6.0 || ~6.7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "WakoPluginAdminToolbar\\": "src/"
+    }
+  },
+  "extra": {
+    "shopware-plugin-class": "WakoPluginAdminToolbar\\WakoPluginAdminToolbar",
+    "label": {
+      "de-DE": "Admin Toolbar",
+      "en-GB": "Admin Toolbar"
+    }
+  }
+}

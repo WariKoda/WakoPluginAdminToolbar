@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Admin Toolbar Settings</title>
+        <title lang="de-DE">Admin Toolbar Einstellungen</title>
+
+        <input-field type="text">
+            <name>adminBasePath</name>
+            <label>Admin Base Path</label>
+            <label lang="de-DE">Admin Basispfad</label>
+            <helpText>URL path where the Shopware Administration is served. Default: /admin</helpText>
+            <helpText lang="de-DE">URL-Pfad unter dem die Shopware Administration erreichbar ist. Standard: /admin</helpText>
+            <defaultValue>/admin</defaultValue>
+        </input-field>
+
+    </card>
+</config>

@@ -1,0 +1,72 @@
+{% block wako_admin_toolbar_settings_index %}
+<sw-page class="wako-admin-toolbar-settings-index">
+    <template #smart-bar-header>
+        <h2>{{ $tc('wako-admin-toolbar.settings.moduleTitle') }}</h2>
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <mt-card
+                position-identifier="wako-admin-toolbar-settings-index"
+                :title="$tc('wako-admin-toolbar.settings.cardTitle')"
+                :is-loading="isLoading"
+            >
+                <p>{{ $tc('wako-admin-toolbar.settings.description') }}</p>
+
+                <mt-switch
+                    :model-value="toolbarEnabled"
+                    :label="$tc('wako-admin-toolbar.profile.switchLabel')"
+                    :help-text="$tc('wako-admin-toolbar.settings.switchHelpText')"
+                    :disabled="!canEditToggle || isSaving || isLoading || undefined"
+                    @update:model-value="onToolbarToggleChange"
+                />
+
+                <mt-banner :variant="toolbarStatusVariant">
+                    {{ toolbarStatusMessage }}
+                </mt-banner>
+            </mt-card>
+
+            <mt-card
+                position-identifier="wako-admin-toolbar-settings-features"
+                :title="$tc('wako-admin-toolbar.settings.featuresTitle')"
+            >
+                <p>{{ $tc('wako-admin-toolbar.settings.featuresDescription') }}</p>
+
+                <sw-container columns="1fr 1fr" gap="16px">
+                    <mt-switch
+                        :model-value="false"
+                        :label="$tc('wako-admin-toolbar.settings.featureProductLinks')"
+                        :help-text="$tc('wako-admin-toolbar.settings.featureProductLinksHelp')"
+                        disabled
+                    />
+
+                    <mt-switch
+                        :model-value="false"
+                        :label="$tc('wako-admin-toolbar.settings.featureCategoryLinks')"
+                        :help-text="$tc('wako-admin-toolbar.settings.featureCategoryLinksHelp')"
+                        disabled
+                    />
+
+                    <mt-switch
+                        :model-value="false"
+                        :label="$tc('wako-admin-toolbar.settings.featureCmsLinks')"
+                        :help-text="$tc('wako-admin-toolbar.settings.featureCmsLinksHelp')"
+                        disabled
+                    />
+
+                    <mt-switch
+                        :model-value="false"
+                        :label="$tc('wako-admin-toolbar.settings.featureCustomerContext')"
+                        :help-text="$tc('wako-admin-toolbar.settings.featureCustomerContextHelp')"
+                        disabled
+                    />
+                </sw-container>
+
+                <mt-banner variant="info">
+                    {{ $tc('wako-admin-toolbar.settings.featuresComingSoon') }}
+                </mt-banner>
+            </mt-card>
+        </sw-card-view>
+    </template>
+</sw-page>
+{% endblock %}

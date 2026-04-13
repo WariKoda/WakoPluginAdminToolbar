@@ -1,0 +1,6 @@
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{% block base_body_inner %}
+    {% sw_include '@WakoPluginAdminToolbar/storefront/component/admin-toolbar.html.twig' %}
+    {{ parent() }}
+{% endblock %}

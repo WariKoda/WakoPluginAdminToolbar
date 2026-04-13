@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="WakoPluginAdminToolbar\Subscriber\ToolbarPageDataSubscriber">
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Rate limiter storage for toolbar auth endpoint -->
+        <service id="wako.toolbar_auth.rate_limiter.storage"
+                 class="Symfony\Component\RateLimiter\Storage\CacheStorage">
+            <argument type="service" id="cache.rate_limiter"/>
+        </service>
+
+        <!-- Rate limiter: fixed window, 30 requests per 60 seconds per IP -->
+        <service id="wako.toolbar_auth.rate_limiter_factory"
+                 class="Symfony\Component\RateLimiter\RateLimiterFactory">
+            <argument type="collection">
+                <argument key="id">wako_toolbar_auth</argument>
+                <argument key="policy">fixed_window</argument>
+                <argument key="limit">30</argument>
+                <argument key="interval">60 seconds</argument>
+            </argument>
+            <argument type="service" id="wako.toolbar_auth.rate_limiter.storage"/>
+        </service>
+
+        <service id="WakoPluginAdminToolbar\Controller\AdminToolbarAuthController">
+            <argument type="service" id="user.repository"/>
+            <argument type="service" id="shopware.jwt_config"/>
+            <argument type="service" id="wako.toolbar_auth.rate_limiter_factory"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
+            <argument type="service" id="rule.repository"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="Shopware\Core\Framework\Adapter\Cache\CacheClearer"/>
+            <tag name="controller.service_arguments"/>
+        </service>
+
+        <service id="WakoPluginAdminToolbar\Controller\AdminToolbarProfileController">
+            <argument type="service" id="user.repository"/>
+            <tag name="controller.service_arguments"/>
+        </service>
+
+    </services>
+</container>

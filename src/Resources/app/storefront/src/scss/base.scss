@@ -1,0 +1,477 @@
+// =============================================================================
+// Wako Admin Toolbar
+// All rules scoped under .wako-admin-toolbar to prevent storefront collisions.
+// =============================================================================
+
+$toolbar-height: 36px;
+$toolbar-bg: #116fff;
+$toolbar-color: #ffffff;
+$toolbar-z: 9999; // above Shopware modals (1050) and offcanvas nav (1100)
+$toggle-width: 36px; // collapse button and bubble are identical in size
+$mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+
+.wako-admin-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: $toolbar-height;
+    z-index: $toolbar-z;
+    background-color: $toolbar-bg;
+    color: $toolbar-color;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px;
+    line-height: $toolbar-height;
+    box-sizing: border-box;
+
+    // Hidden by default — JS removes this class after confirming admin session
+    &--hidden {
+        display: none !important;
+    }
+
+    // Collapsed — bar disappears, only the bubble remains
+    &--collapsed {
+        height: 0;
+        overflow: visible;
+
+        .wako-admin-toolbar__inner {
+            display: none;
+        }
+
+        .wako-admin-toolbar__bubble {
+            display: flex;
+        }
+    }
+
+    &__inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        padding: 0 0 0 4px; // no right padding — toggle button fills that corner
+        max-width: none;
+    }
+
+    &__left,
+    &__right {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        min-width: 0;
+        height: 100%;
+    }
+
+    // Inline SVG icons — shared sizing + vertical alignment
+    &__icon {
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+        display: inline-block;
+        position: relative;
+        top: -1px;
+        fill: currentColor;
+        flex-shrink: 0;
+    }
+
+    &__home,
+    &__link,
+    a {
+        height: 100%;
+        color: $toolbar-color;
+        text-decoration: none;
+        padding: 0 10px;
+        white-space: nowrap;
+
+        &:hover,
+        &:focus {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: $toolbar-color;
+            text-decoration: none;
+        }
+    }
+
+    // Home link contains only the SVG logo — flex-center it vertically
+    &__home {
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+    }
+
+    // Shopware signet icon used in the home link and the collapsed bubble
+    &__logo {
+        display: block;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+    &__nav-links {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        height: 100%;
+
+        &::before {
+            content: '|';
+            color: rgba(255, 255, 255, 0.3);
+            padding: 0 4px;
+        }
+    }
+
+    &__center {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        height: 100%;
+    }
+
+    &__feature--hidden {
+        display: none !important;
+    }
+
+    // Muted pipe separator
+    &__sep {
+        width: 1px;
+        height: 14px;
+        background: rgba(255, 255, 255, 0.2);
+        flex-shrink: 0;
+        margin: 0 2px;
+
+        &--hidden {
+            display: none;
+        }
+    }
+
+    // Route name — monospace, small, muted
+    &__route {
+        font-family: $mono;
+        font-size: 11px;
+        white-space: nowrap;
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: default;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    // Cache status dot — JS adds --hit or --miss modifier
+    &__cache {
+        cursor: default;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+
+        .wako-admin-toolbar__icon {
+            width: 10px;
+            height: 10px;
+            opacity: 0.4;
+        }
+
+        &--hit .wako-admin-toolbar__icon {
+            color: #6ee7b7;
+            opacity: 1;
+        }
+
+        &--miss .wako-admin-toolbar__icon {
+            color: #fca5a5;
+            opacity: 1;
+        }
+    }
+
+    // Generic small action button: copy ID, clear cache
+    &__btn {
+        background: none;
+        border: none;
+        color: $toolbar-color;
+        cursor: pointer;
+        padding: 0 7px;
+        height: $toolbar-height;
+        font-size: 12px;
+        font-family: $mono;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+
+        &:hover,
+        &:focus {
+            background-color: rgba(255, 255, 255, 0.12);
+            outline: none;
+        }
+
+        &:disabled {
+            cursor: default;
+            opacity: 0.3;
+        }
+    }
+
+    &__user {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 7px;
+        height: $toolbar-height;
+        color: $toolbar-color;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: $toolbar-color;
+            text-decoration: none;
+        }
+    }
+
+    // Collapse button — sits flush in the top-right corner, same footprint as the bubble
+    &__toggle {
+        flex-shrink: 0;
+        width: $toggle-width;
+        height: $toolbar-height;
+        background: none;
+        border: none;
+        color: $toolbar-color;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .wako-admin-toolbar__icon {
+            width: 10px;
+            height: 10px;
+        }
+
+        &:hover,
+        &:focus {
+            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+    }
+
+    // Collapsed bubble — same width/height as the toggle button, anchored top-right
+    &__bubble {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: $toggle-width;
+        height: $toolbar-height;
+        background-color: $toolbar-bg;
+        color: $toolbar-color;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+        z-index: $toolbar-z;
+        transition: filter 0.15s ease;
+
+        &:hover,
+        &:focus {
+            filter: brightness(1.4);
+            outline: none;
+        }
+    }
+
+    // Shared dropdown UI (variants + customer context)
+    &__dropdown {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        height: 100%;
+
+        &--hidden {
+            display: none;
+        }
+
+        &-trigger .wako-admin-toolbar__icon:last-child {
+            width: 10px;
+            height: 10px;
+        }
+
+        &-trigger--static {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 280px;
+            min-width: 0;
+            cursor: pointer;
+        }
+
+        &-trigger-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: $toolbar-bg;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            min-width: 100%;
+            flex-direction: column;
+            z-index: 1;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        &-menu--info {
+            min-width: 340px;
+            max-width: min(420px, calc(100vw - 16px));
+            max-height: 360px;
+            line-height: normal;
+        }
+
+        &--align-right &-menu {
+            left: auto;
+            right: 0;
+        }
+
+        // Comes after the general `a` rule → wins on cascade at equal specificity (0,1,1)
+        &-menu a {
+            padding: 6px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: block;
+            font-size: 12px;
+            line-height: 1.4;
+            white-space: nowrap;
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        &--hover:hover &-menu,
+        &--hover:focus-within &-menu,
+        &--loaded:hover &-menu,
+        &--loaded:focus-within &-menu {
+            display: flex;
+        }
+    }
+
+    &__dropdown-section {
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        line-height: 1.4;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &__dropdown-label {
+        font-size: 11px;
+        line-height: 1.3;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        opacity: 0.7;
+        margin-bottom: 4px;
+    }
+
+    &__dropdown-copy-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    &__dropdown-value,
+    &__dropdown-empty,
+    &__rule-item {
+        font-size: 12px;
+        line-height: 1.4;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    &__dropdown-copy-row &__dropdown-value {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    &__icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border: none;
+        border-radius: 4px;
+        background: none;
+        color: $toolbar-color;
+        cursor: pointer;
+        flex-shrink: 0;
+        opacity: 0.8;
+
+        .wako-admin-toolbar__icon {
+            top: 0;
+        }
+
+        &:hover,
+        &:focus {
+            background-color: rgba(255, 255, 255, 0.12);
+            opacity: 1;
+            outline: none;
+        }
+
+        &:disabled {
+            cursor: default;
+            opacity: 0.35;
+        }
+    }
+
+    &__dropdown-empty {
+        opacity: 0.8;
+    }
+
+    &__rule-list {
+        list-style: none;
+        margin: 6px 0 0;
+        padding: 0;
+        overflow-y: auto;
+    }
+
+    &__rule-item {
+        padding: 6px 0 0;
+    }
+
+    &__rule-link {
+        color: $toolbar-color;
+        text-decoration: none;
+        display: block;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+            color: $toolbar-color;
+        }
+    }
+
+    // Hide dev info on small screens
+    @media (max-width: 768px) {
+        &__route,
+        &__cache {
+            display: none;
+        }
+    }
+
+    // Hide nav + context links on very small screens
+    @media (max-width: 576px) {
+        &__nav-links,
+        &__center {
+            display: none;
+        }
+    }
+}
+
+// Push body content down when toolbar is expanded.
+// JS also sets padding-top directly as a :has()-less fallback.
+body:has(.wako-admin-toolbar:not(.wako-admin-toolbar--hidden):not(.wako-admin-toolbar--collapsed)) {
+    padding-top: $toolbar-height !important;
+}

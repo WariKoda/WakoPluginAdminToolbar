@@ -1,0 +1,29 @@
+{
+    "adminToolbar": {
+        "adminLabel": "Admin",
+        "goToDashboard": "Zur Shopware-Administration",
+        "collapseToolbar": "Toolbar einklappen",
+        "expandToolbar": "Toolbar ausklappen",
+        "editProduct": "Produkt bearbeiten",
+        "editLayout": "Layout bearbeiten",
+        "editShoppingExperience": "Erlebniswelt bearbeiten",
+        "editCategory": "Kategorie bearbeiten",
+        "editLandingPage": "Landingpage bearbeiten",
+        "editPage": "Shopseite bearbeiten",
+        "copyId": "ID kopieren",
+        "clearCache": "Alle Caches leeren",
+        "catalogues": "Produkte",
+        "orders": "Bestellungen",
+        "extensions": "Erweiterungen",
+        "settings": "Einstellungen",
+        "profile": "Profil",
+        "customer": "Kunde",
+        "customerName": "Name",
+        "customerNumber": "Kundennummer",
+        "copyCustomerNumber": "Kundennummer kopieren",
+        "email": "E-Mail",
+        "copyEmail": "E-Mail kopieren",
+        "activeRules": "Aktive Regeln",
+        "noActiveRules": "Keine aktiven Regeln im aktuellen Kontext"
+    }
+}

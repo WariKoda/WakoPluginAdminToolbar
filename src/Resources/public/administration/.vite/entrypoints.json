@@ -1,0 +1,23 @@
+{
+  "base": "/bundles/wakopluginadmintoolbar/administration/",
+  "entryPoints": {
+    "wako-plugin-admin-toolbar": {
+      "css": [],
+      "dynamic": [],
+      "js": [
+        "/bundles/wakopluginadmintoolbar/administration/assets/wako-plugin-admin-toolbar-BKfxhMIP.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}
