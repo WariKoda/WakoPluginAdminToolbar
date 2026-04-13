@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.1 — 2026-04-13
+
+### Changed
+- Refactored `AdminToolbarAuthController` into dedicated toolbar services for session resolution, privilege evaluation, capability building, variant loading, customer context loading, and active rule lookup
+- Introduced a dedicated `ToolbarSession` value object to replace the previous array-based toolbar session state
+- Kept the existing routes, response payloads, and privilege model intact while moving business logic out of the controller
+
+### Security
+- Centralized toolbar session and privilege checks in dedicated services to keep authorization logic explicit and reusable across toolbar endpoints
+- Preserved the existing server-side JWT validation, ACL enforcement, and session-derived customer context handling during the refactor
+
 ## 1.3.0 — 2026-04-12
 
 ### Added
