@@ -4,11 +4,11 @@ Shopware 6 storefront plugin that shows a fixed administration toolbar at the to
 
 ## Screenshots
 
-<p>
-  <img src="./docs/images/wakoAdminToolbar_001.png" alt="WakoPluginAdminToolbar Screenshot 1" width="32%">
-  <img src="./docs/images/wakoAdminToolbar_002.png" alt="WakoPluginAdminToolbar Screenshot 2" width="32%">
-  <img src="./docs/images/wakoAdminToolbar_003.png" alt="WakoPluginAdminToolbar Screenshot 3" width="32%">
-</p>
+![WakoPluginAdminToolbar Screenshot 1](./docs/images/wakoAdminToolbar_001.png)
+
+![WakoPluginAdminToolbar Screenshot 2](./docs/images/wakoAdminToolbar_002.png)
+
+![WakoPluginAdminToolbar Screenshot 3](./docs/images/wakoAdminToolbar_003.png)
 
 ## What it does
 
