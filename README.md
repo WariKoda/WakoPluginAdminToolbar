@@ -1,6 +1,6 @@
 # WakoPluginAdminToolbar
 
-Shopware 6 storefront plugin that shows a fixed administration toolbar at the top of the storefront for eligible administration users.
+Shopware 6 storefront plugin that shows a fixed administration toolbar at the top of the storefront for eligible administration users, including quick links into the Shopware Administration, context-aware edit buttons for products, categories, variants, CMS pages and shopping experiences, customer context insights, rule visibility, copy-to-clipboard helpers, and cache clearing.
 
 ## Screenshots
 
