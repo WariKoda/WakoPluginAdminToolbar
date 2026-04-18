@@ -1,18 +1,18 @@
 # Contributing
 
-Vielen Dank für dein Interesse an Beiträgen zu **WakoPluginAdminToolbar**.
+Thank you for your interest in contributing to **WakoPluginAdminToolbar**.
 
-## Bevor du loslegst
+## Before you start
 
-- Prüfe bitte zuerst bestehende Issues und Pull Requests.
-- Für größere Änderungen oder neue Features bitte vorab ein Issue oder eine kurze Diskussion eröffnen.
-- Kleine Bugfixes, Dokumentationsverbesserungen und Tests können direkt als Pull Request eingereicht werden.
+- Please check existing issues and pull requests first.
+- For larger changes or new features, open an issue or start a short discussion before implementation.
+- Small bug fixes, documentation improvements, and tests can be submitted directly as a pull request.
 
-## Lokales Setup
+## Local setup
 
-Voraussetzung ist eine laufende Shopware-6-Installation, in der das Plugin lokal entwickelt werden kann.
+You need a working Shopware 6 installation where the plugin can be developed locally.
 
-Aus dem Shopware-Root:
+From the Shopware root:
 
 ```bash
 bin/console plugin:refresh
@@ -22,57 +22,57 @@ bin/console cache:clear
 ./bin/build-administration.sh
 ```
 
-Optional während der Entwicklung:
+Optional during development:
 
 ```bash
 ./bin/watch-storefront.sh
 ```
 
-## Entwicklungsrichtlinien
+## Development guidelines
 
-Bitte orientiere dich an der bestehenden Codebasis und halte Änderungen möglichst klein und fokussiert.
+Please follow the existing code style and keep changes as small and focused as possible.
 
-### Shopware / Plugin-spezifisch
+### Shopware / plugin-specific
 
-- Keine Core-Dateien von Shopware ändern.
-- PHP mit `declare(strict_types=1);` und im bestehenden Stil halten.
-- Services in `src/Resources/config/services.xml` registrieren.
-- Storefront-Templates mit Shopware Twig-Konventionen umsetzen (`sw_extends`, `sw_include`).
-- Storefront-CSS immer unter `.wako-admin-toolbar` scopen.
-- Benutzertexte nicht hartcodieren; immer Snippets verwenden.
-- Für neue UI-Texte immer **beide** Sprachen pflegen:
+- Do not modify Shopware core files.
+- Use PHP with `declare(strict_types=1);` and follow the existing style.
+- Register services in `src/Resources/config/services.xml`.
+- Implement storefront templates with Shopware Twig conventions (`sw_extends`, `sw_include`).
+- Always scope storefront CSS under `.wako-admin-toolbar`.
+- Do not hardcode user-facing text; always use snippets.
+- For new UI text, always maintain **both** languages:
   - `src/Resources/snippet/en-GB/`
   - `src/Resources/snippet/de-DE/`
-  - sowie bei Admin-UI zusätzlich die Admin-Snippets
+  - and for admin UI also the corresponding admin snippets
 
-### Sicherheit / Berechtigungen
+### Security / permissions
 
-Dieses Plugin folgt einem strikten ACL-/Privilege-Modell. Deshalb gilt:
+This plugin follows a strict ACL / privilege model. Therefore:
 
-- Jede privilegierte Aktion muss **serverseitig** geprüft werden.
-- Versteckte oder deaktivierte UI ist **keine** Sicherheitsmaßnahme.
-- Neue Buttons, Endpoints oder Aktionen müssen immer:
-  1. benötigte Privilegien definieren,
-  2. im Backend erzwingen,
-  3. falls nötig minimale Capability-Flags an die UI liefern,
-  4. die UI entsprechend sichtbar/unsichtbar machen,
-  5. bei plugin-spezifischen Rechten die Admin-Privilege-Registrierung und Snippets ergänzen.
-- Admin-Bearer-Tokens dürfen niemals an Storefront-JavaScript zurückgegeben werden.
-- Keine sensiblen Daten in `/admin/toolbar-auth` aufnehmen.
+- Every privileged action must be enforced **server-side**.
+- Hidden or disabled UI is **not** a security measure.
+- New buttons, endpoints, or actions must always:
+  1. define the required privileges,
+  2. enforce them in the backend,
+  3. expose minimal capability flags to the UI when needed,
+  4. hide or disable the UI accordingly,
+  5. extend admin privilege registration and snippets for plugin-specific permissions.
+- Admin bearer tokens must never be exposed to storefront JavaScript.
+- Do not include sensitive data in `/admin/toolbar-auth`.
 
-## Pull Requests
+## Pull requests
 
-Bitte achte bei Pull Requests auf folgende Punkte:
+Please make sure your pull request includes:
 
-- Eine klare, kurze Beschreibung des Problems und der Lösung
-- Kleine, thematisch abgegrenzte Commits
-- Keine unnötigen Refactorings im selben PR
-- Dokumentation aktualisieren, wenn sich Verhalten oder Nutzung ändern
-- Changelog ergänzen, wenn die Änderung für Nutzer relevant ist
+- a clear and short description of the problem and the solution
+- small, focused commits
+- no unnecessary refactorings in the same PR
+- updated documentation when behavior or usage changes
+- a changelog entry if the change is relevant for users
 
-## Validierung vor dem Einreichen
+## Validation before submitting
 
-Bitte führe – soweit für deine Änderung relevant – mindestens diese Schritte aus:
+Please run at least these steps when relevant for your change:
 
 ```bash
 bin/console cache:clear
@@ -80,25 +80,25 @@ bin/console cache:clear
 ./bin/build-administration.sh
 ```
 
-Zusätzlich bitte manuell prüfen:
+Please also verify manually:
 
-- Toolbar erscheint nur für berechtigte und aktivierte Admin-Benutzer
-- neue oder geänderte Aktionen respektieren ACL/Privileges serverseitig
-- neue Snippets sind in `de-DE` und `en-GB` vorhanden
-- Storefront-Styles bleiben auf `.wako-admin-toolbar` begrenzt
+- the toolbar is only visible for authorized and enabled admin users
+- new or changed actions respect ACL / privileges server-side
+- new snippets exist in both `de-DE` and `en-GB`
+- storefront styles remain scoped to `.wako-admin-toolbar`
 
-## Bugs melden
+## Reporting bugs
 
-Wenn du einen Fehler meldest, sind diese Informationen hilfreich:
+If you report a bug, the following information is helpful:
 
-- Shopware-Version
-- Plugin-Version
-- betroffene Seite bzw. Route
-- erwartetes Verhalten
-- tatsächliches Verhalten
-- Reproduktionsschritte
-- relevante Screenshots oder Logs
+- Shopware version
+- plugin version
+- affected page or route
+- expected behavior
+- actual behavior
+- reproduction steps
+- relevant screenshots or logs
 
-## Lizenz
+## License
 
-Mit dem Einreichen eines Beitrags erklärst du dich damit einverstanden, dass dein Beitrag unter der Lizenz des Projekts veröffentlicht wird. Details siehe [LICENSE](./LICENSE).
+By submitting a contribution, you agree that your work will be licensed under the project's license. See [LICENSE](./LICENSE) for details.
