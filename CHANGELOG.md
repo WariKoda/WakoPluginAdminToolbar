@@ -1,88 +1,88 @@
 # 1.3.1
-* Geändert: `AdminToolbarAuthController` in dedizierte Toolbar-Services für Session-Auflösung, Privileg-Auswertung, Capability-Building, Varianten-Laden, Customer-Context-Laden und Active-Rule-Lookup refaktoriert
-* Geändert: Dediziertes `ToolbarSession`-Value-Object als Ersatz für den bisherigen array-basierten Toolbar-Session-State eingeführt
-* Geändert: Bestehende Routen, Response-Payloads und das Privileg-Modell beim Refactoring unverändert beibehalten
-* Sicherheit: Toolbar-Session- und Privileg-Prüfungen in dedizierten Services zentralisiert, damit die Autorisierungslogik explizit und wiederverwendbar bleibt
-* Sicherheit: Bestehende serverseitige JWT-Validierung, ACL-Enforcement und sessionbasierte Customer-Context-Ermittlung während des Refactorings beibehalten
+* Changed: Refactored `AdminToolbarAuthController` into dedicated toolbar services for session resolution, privilege evaluation, capability building, variant loading, customer context loading, and active rule lookup
+* Changed: Introduced a dedicated `ToolbarSession` value object to replace the previous array-based toolbar session state
+* Changed: Kept existing routes, response payloads, and the privilege model unchanged during the refactoring
+* Security: Centralized toolbar session and privilege checks in dedicated services to keep the authorization logic explicit and reusable
+* Security: Preserved existing server-side JWT validation, ACL enforcement, and session-based customer context resolution during the refactoring
 
 # 1.3.0
-* Hinzugefügt: Dediziertes Administrations-Einstellungsmodul für den aktuellen Benutzer unter **Settings → Plugins → Admin Toolbar**
-* Hinzugefügt: Aktueller Benutzer kann die Toolbar-Aktivierung jetzt außerhalb der Shopware-Profilseite verwalten
-* Hinzugefügt: Bereich „Available features“ mit deaktivierten Placeholder-Toggles für zukünftige benutzerspezifische Feature-Präferenzen vorbereitet
-* Sicherheit: End-to-End-Shopware-ACL-Integration für Toolbar-Nutzung und Feature-Sichtbarkeit
-* Sicherheit: Toolbar-Aktivierung berücksichtigt jetzt konsistent sowohl Profile-/Self-Update-Berechtigungen als auch die Plugin-Toolbar-Privilegien
-* Sicherheit: Endpoint für die Toolbar-Aktivierung des aktuellen Benutzers ist für Self-Service mit expliziten ACL-Prüfungen geschützt
-* Geändert: Toolbar-Aktivierungs-UX aus dem Profil-Override in das dedizierte Administrations-Einstellungsmodul verschoben
-* Geändert: Administrations-UI zeigt klarere Status-/Hilfsmeldungen für Toolbar-Verfügbarkeit und fehlende Privilegien
-* Geändert: Status-/Infomeldungen im Einstellungsmodul verwenden jetzt `mt-banner`
-* Entfernt: Profile-Page-Override für die Toolbar-Aktivierung
+* Added: Dedicated administration settings module for the current user under **Settings → Plugins → Admin Toolbar**
+* Added: Current users can now manage toolbar activation outside of the Shopware profile page
+* Added: Prepared an "Available features" section with disabled placeholder toggles for future per-user feature preferences
+* Security: End-to-end Shopware ACL integration for toolbar usage and feature visibility
+* Security: Toolbar activation now consistently respects both profile/self-update permissions and the plugin toolbar privileges
+* Security: Endpoint for current-user toolbar activation is protected for self-service usage with explicit ACL checks
+* Changed: Moved the toolbar activation UX from the profile override into the dedicated administration settings module
+* Changed: Administration UI now shows clearer status and help messages for toolbar availability and missing privileges
+* Changed: Status and info messages in the settings module now use `mt-banner`
+* Removed: Profile page override for toolbar activation
 
 # 1.2.4
-* Sicherheit: Admin-Bearer-Token aus `/admin/toolbar-auth`-Responses entfernt
-* Sicherheit: Storefront-seitige Admin-API-Nutzung durch dedizierte serverseitige Toolbar-Endpoints für Cache-Clearing und Varianten-Laden ersetzt
-* Sicherheit: `/admin/toolbar-auth` liefert jetzt nur noch das minimale `enabled`-Flag zurück
-* Geändert: Customer Context wird jetzt lazy beim ersten Dropdown-Interaktionspunkt geladen statt während der Toolbar-Initialisierung
-* Geändert: Customer Context leitet den Sales Channel jetzt serverseitig aus der Session ab, statt einem clientseitig gelieferten `salesChannelId` zu vertrauen
-* Geändert: Customer-Name wird nur noch innerhalb des Dropdown-Inhalts angezeigt; der Trigger behält sein statisches Label
+* Security: Removed the admin bearer token from `/admin/toolbar-auth` responses
+* Security: Replaced storefront-side admin API usage with dedicated server-side toolbar endpoints for cache clearing and variant loading
+* Security: `/admin/toolbar-auth` now returns only the minimal `enabled` flag
+* Changed: Customer context is now loaded lazily on the first dropdown interaction instead of during toolbar initialization
+* Changed: Customer context now derives the sales channel server-side from the session instead of trusting a client-supplied `salesChannelId`
+* Changed: Customer name is now displayed only inside the dropdown content; the trigger keeps its static label
 
 # 1.2.3
-* Hinzugefügt: Customer Context zur Admin Toolbar hinzugefügt
-* Hinzugefügt: Dropdown-UI für Customer Context mit Kundeninformationen und aktiven Regeln
+* Added: Added customer context to the admin toolbar
+* Added: Dropdown UI for customer context with customer information and active rules
 
 # 1.2.2
-* Geändert: Auf Meteor-Kit-Icons umgestellt
+* Changed: Switched to Meteor Kit icons
 
 # 1.2.1
-* Hinzugefügt: Quick-Access-Navigationslinks für Orders, Extensions und Settings im linken Toolbar-Bereich
-* Hinzugefügt: Neue SVG-Icons `receipt`, `extension`, `cog`, `chevron-up`
-* Hinzugefügt: Storefront-Snippets für `orders`, `extensions`, `settings` (`en-GB` / `de-DE`)
-* Geändert: Kontextabhängige Links (Edit Product, Edit Layout usw.) in einen dedizierten `wako-admin-toolbar__center`-Bereich verschoben und visuell von der statischen Navigation getrennt
-* Geändert: Collapse-Toggle-Button verwendet jetzt ein `chevron-up`-Icon statt `chevron-down`
-* Geändert: Navigationslinks und Center-Bereich werden auf Screens ≤576px ausgeblendet
+* Added: Quick-access navigation links for Orders, Extensions, and Settings in the left toolbar area
+* Added: New SVG icons `receipt`, `extension`, `cog`, `chevron-up`
+* Added: Storefront snippets for `orders`, `extensions`, `settings` (`en-GB` / `de-DE`)
+* Changed: Context-dependent links (Edit Product, Edit Layout, etc.) moved into a dedicated `wako-admin-toolbar__center` area and visually separated from the static navigation
+* Changed: Collapse toggle button now uses a `chevron-up` icon instead of `chevron-down`
+* Changed: Navigation links and the center area are hidden on screens ≤576px
 
 # 1.2.0
-* Sicherheit: Der `/admin/toolbar-auth`-Endpoint validiert jetzt die JWT-Signatur kryptographisch mit Shopwares HMAC-SHA256-Key (`APP_SECRET`) vor jeder Datenrückgabe; gefälschte Tokens werden abgewiesen
-* Sicherheit: `email` aus der Auth-Response entfernt; nur `firstName` und `lastName` werden noch zurückgegeben
-* Sicherheit: Alle `X-Wako-Debug`-Response-Header und die `debug()`-Methode entfernt; Fehler-Responses sind jetzt einheitlich `204 No Content` ohne unterscheidbare Zusatzinformationen
-* Sicherheit: IP-basiertes Rate-Limiting (Fixed Window, 30 Requests / 60s) für `/admin/toolbar-auth` mit Symfony `RateLimiterFactory` hinzugefügt, um Brute-Force und Enumeration zu erschweren
-* Sicherheit: Alle dynamischen DOM-Updates im Storefront-JS verwenden jetzt sichere APIs (`createElement`, `createElementNS`, `textContent`) statt `innerHTML`
-* Sicherheit: Boxicons-Icon-Font wird nicht mehr von `unpkg.com` geladen; dadurch entfallen Supply-Chain-Risiken, Third-Party-Requests und rund 100 KB unnötige Downloads
-* Geändert: Icons sind jetzt Inline-SVG-Symbole in einem dedizierten `admin-toolbar-icons.html.twig`-Template und werden im Toolbar-Markup per `<svg><use href="#wako-icon-*">` referenziert
-* Geändert: Auth-Response enthält jetzt den Header `Cache-Control: private, no-store`
-* Geändert: Totes `$no`-Lambda aus `AdminToolbarAuthController` entfernt
-* Hinzugefügt: User-Icon (`bx-user` SVG) neben dem Admin-Benutzernamen in der Toolbar angezeigt
-* Hinzugefügt: `admin-toolbar-icons.html.twig` als eigenständiges SVG-Sprite mit 8 Icon-Symbolen (check, chevron-down, copy, cube, layout, refresh, user, x)
+* Security: The `/admin/toolbar-auth` endpoint now validates the JWT signature cryptographically with Shopware's HMAC-SHA256 key (`APP_SECRET`) before returning any data; forged tokens are rejected
+* Security: Removed `email` from the auth response; only `firstName` and `lastName` are returned now
+* Security: Removed all `X-Wako-Debug` response headers and the `debug()` method; error responses are now consistently `204 No Content` without distinguishable extra information
+* Security: Added IP-based rate limiting (fixed window, 30 requests / 60s) for `/admin/toolbar-auth` using Symfony `RateLimiterFactory` to make brute-force and enumeration harder
+* Security: All dynamic DOM updates in the storefront JS now use safe APIs (`createElement`, `createElementNS`, `textContent`) instead of `innerHTML`
+* Security: The Boxicons icon font is no longer loaded from `unpkg.com`, removing supply-chain risks, third-party requests, and roughly 100 KB of unnecessary downloads
+* Changed: Icons are now inline SVG symbols in a dedicated `admin-toolbar-icons.html.twig` template and are referenced in the toolbar markup via `<svg><use href="#wako-icon-*">`
+* Changed: Auth response now includes the header `Cache-Control: private, no-store`
+* Changed: Removed dead `$no` lambda from `AdminToolbarAuthController`
+* Added: Displayed a user icon (`bx-user` SVG) next to the admin user name in the toolbar
+* Added: `admin-toolbar-icons.html.twig` as a standalone SVG sprite with 8 icon symbols (check, chevron-down, copy, cube, layout, refresh, user, x)
 
 # 1.1.2
-* Geändert: Drei sequentielle JS-API-Calls (`toolbar-session` + `_info/me` + `user/{id}`) durch einen einzelnen `GET /admin/toolbar-auth`-Endpoint ersetzt, der das Bearer-Cookie liest, das JWT dekodiert und den User in einem DB-Roundtrip lädt; dadurch deutlich schnellere Toolbar-Initialisierung
-* Geändert: Äußere Toolbar-Hülle erscheint jetzt synchron, indem das `bearerAuth`-Cookie via `document.cookie` geprüft wird; dadurch kein Layout-Shift mehr beim Laden der Seite
-* Geändert: `AdminToolbarSessionController` und dessen `/admin/toolbar-session`-Route entfernt, da durch `/admin/toolbar-auth` ersetzt
-* Hinzugefügt: Varianten-Dropdown auf Varianten-Produktseiten; beim Hover über „Edit Product“ werden Geschwistervarianten lazy über die Admin API geladen und als Deep Links mit Optionskombinationen angezeigt (z. B. „Blue / XL“)
-* Behoben: `UserEntity::getActive()` wird jetzt korrekt verwendet (statt `isActive()`)
+* Changed: Replaced three sequential JS API calls (`toolbar-session` + `_info/me` + `user/{id}`) with a single `GET /admin/toolbar-auth` endpoint that reads the bearer cookie, decodes the JWT, and loads the user in one DB roundtrip; this significantly speeds up toolbar initialization
+* Changed: Outer toolbar shell now appears synchronously by checking the `bearerAuth` cookie via `document.cookie`, eliminating layout shift during page load
+* Changed: Removed `AdminToolbarSessionController` and its `/admin/toolbar-session` route, as it was replaced by `/admin/toolbar-auth`
+* Added: Variant dropdown on variant product pages; hovering over "Edit Product" lazily loads sibling variants via the Admin API and displays them as deep links with option combinations (e.g. "Blue / XL")
+* Fixed: `UserEntity::getActive()` is now used correctly (instead of `isActive()`)
 
 # 1.1.0
-* Hinzugefügt: Per-User-Opt-in-Toggle in der Admin-Profilseite (Settings → Profile → General)
-* Hinzugefügt: `CustomFieldInstaller` legt beim Plugin-Install das Boolean-Custom-Field `wako_admin_toolbar_enabled` auf der User-Entity an und entfernt es beim Uninstall sauber
-* Hinzugefügt: Toolbar erscheint jetzt nur noch für Admin-Benutzer, die sie explizit aktiviert haben
-* Geändert: Toolbar-Auth-Flow ruft zusätzlich zu `/api/_info/me` jetzt `/api/user/{id}` auf, um `customFields` zuverlässig zu lesen, da diese in `/api/_info/me` nicht enthalten sind
-* Geändert: Kontextlinks (Produkt, CMS, Kategorie, Landingpage) werden jetzt serverseitig in Twig statt in JavaScript gerendert
-* Geändert: Icons verwenden die Boxicons-Webfont (`bx-*`), die per JS lazy nur für authentifizierte Admin-Benutzer geladen wird
-* Geändert: Dashboard-Link auf `#/sw/dashboard/index` korrigiert
-* Geändert: Routenname in der Toolbar entfernt jetzt den Präfix `frontend.`
-* Behoben: Produktseiten mit individuellem CMS-Layout zeigen jetzt sowohl einen „Edit Product“- als auch einen „Edit Layout“-Link
-* Behoben: Eingeklappter Toolbar-Tab (`data-toolbar-tab`) reagiert jetzt auf Tastaturereignisse (Enter / Space)
-* Entfernt: `AdminToolbarConfigController` (Toggle-Endpoint), da die Einstellung jetzt über den Standard-Profile-Save-Flow gespeichert wird
-* Entfernt: `data-admin-toolbar-options`-JSON-Attribut; Page-Daten werden nicht mehr ins DOM serialisiert
+* Added: Per-user opt-in toggle on the admin profile page (Settings → Profile → General)
+* Added: `CustomFieldInstaller` creates the boolean custom field `wako_admin_toolbar_enabled` on the user entity during plugin installation and removes it cleanly during uninstall
+* Added: Toolbar is now shown only for admin users who explicitly enabled it
+* Changed: Toolbar auth flow now additionally calls `/api/user/{id}` alongside `/api/_info/me` to read `customFields` reliably, since they are not included in `/api/_info/me`
+* Changed: Context links (product, CMS, category, landing page) are now rendered server-side in Twig instead of JavaScript
+* Changed: Icons now use the Boxicons webfont (`bx-*`), which is lazy-loaded via JS only for authenticated admin users
+* Changed: Corrected dashboard link to `#/sw/dashboard/index`
+* Changed: Route name in the toolbar now removes the `frontend.` prefix
+* Fixed: Product pages with an individual CMS layout now show both an "Edit Product" and an "Edit Layout" link
+* Fixed: Collapsed toolbar tab (`data-toolbar-tab`) now responds to keyboard events (Enter / Space)
+* Removed: `AdminToolbarConfigController` (toggle endpoint), since the setting is now saved through the standard profile save flow
+* Removed: `data-admin-toolbar-options` JSON attribute; page data is no longer serialized into the DOM
 
 # 1.0.0
-* Hinzugefügt: Initial Release
-* Hinzugefügt: Fixed Toolbar wird in jede Storefront-Seite injiziert und ist standardmäßig ausgeblendet
-* Hinzugefügt: Clientseitige Admin-Session-Erkennung über `bearerAuth`-Cookie und `/api/_info/me`
-* Hinzugefügt: Dashboard-Link sowie kontextabhängige Deep Links für Produkte, Kategorien, CMS-/Shopping-Experiences und Landingpages
-* Hinzugefügt: Copy-to-Clipboard-Button für Entity-IDs
-* Hinzugefügt: One-Click-Cache-Clear via `DELETE /api/_action/cache`
-* Hinzugefügt: HTTP-Cache-Statusindikator (HEAD-Request, `X-Symfony-Cache` / `Age`-Header)
-* Hinzugefügt: Collapse/Expand mit persistentem Status in `localStorage`
-* Hinzugefügt: Page-Content wird nach unten verschoben (kein Overlap) und bleibt vollständig cache-sicher, da die Toolbar serverseitig immer `display:none` ist
-* Hinzugefügt: Plugin-Konfiguration `adminBasePath`, `toolbarBgColor`, `toolbarTextColor`, `toolbarHeight`
-* Hinzugefügt: Storefront-Snippet-Übersetzungen für `en-GB` und `de-DE`
+* Added: Initial release
+* Added: Injected a fixed toolbar into every storefront page, hidden by default
+* Added: Client-side admin session detection via the `bearerAuth` cookie and `/api/_info/me`
+* Added: Dashboard link plus context-aware deep links for products, categories, CMS / shopping experiences, and landing pages
+* Added: Copy-to-clipboard button for entity IDs
+* Added: One-click cache clear via `DELETE /api/_action/cache`
+* Added: HTTP cache status indicator (HEAD request, `X-Symfony-Cache` / `Age` headers)
+* Added: Collapse / expand with persistent state in `localStorage`
+* Added: Page content is pushed down (no overlap) and remains fully cache-safe because the toolbar is always rendered server-side with `display:none`
+* Added: Plugin configuration `adminBasePath`, `toolbarBgColor`, `toolbarTextColor`, `toolbarHeight`
+* Added: Storefront snippet translations for `en-GB` and `de-DE`
