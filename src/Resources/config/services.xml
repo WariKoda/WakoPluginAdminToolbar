@@ -45,7 +45,6 @@
 
         <service id="WakoPluginAdminToolbar\Service\Toolbar\ActiveRuleProvider">
             <argument type="service" id="rule.repository"/>
-            <argument type="service" id="Doctrine\DBAL\Connection"/>
         </service>
 
         <service id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarCustomerContextProvider">

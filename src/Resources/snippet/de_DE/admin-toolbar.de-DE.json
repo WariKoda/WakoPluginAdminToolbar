@@ -24,6 +24,8 @@
         "email": "E-Mail",
         "copyEmail": "E-Mail kopieren",
         "activeRules": "Aktive Regeln",
+        "showAllRules": "Alle %count% anzeigen",
+        "closeRulesModal": "Regelübersicht schließen",
         "noActiveRules": "Keine aktiven Regeln im aktuellen Kontext"
     }
 }

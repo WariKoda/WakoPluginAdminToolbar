@@ -72,6 +72,10 @@
         <svg class="wako-admin-toolbar__icon" aria-hidden="true" focusable="false">
             <use href="#wako-icon-user"/>
         </svg>{% endset %}
+    {% set iconX %}
+        <svg class="wako-admin-toolbar__icon" aria-hidden="true" focusable="false">
+            <use href="#wako-icon-x"/>
+        </svg>{% endset %}
 
     {% set shopwareIcon %}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" class="wako-admin-toolbar__logo" aria-hidden="true"
@@ -86,7 +90,8 @@
     <div id="wako-admin-toolbar"
          class="wako-admin-toolbar wako-admin-toolbar--hidden"
          data-admin-toolbar="true"
-         data-admin-base-url="{{ adminBaseUrl }}">
+         data-admin-base-url="{{ adminBaseUrl }}"
+         data-rules-show-all-label="{{ 'adminToolbar.showAllRules'|trans|striptags }}">
 
         {# Full toolbar — shown when expanded #}
         <div class="wako-admin-toolbar__inner">
@@ -179,32 +184,32 @@
 
                 {# Route name — stripped of "frontend." prefix #}
                 {% if routeName %}
-                    <span class="wako-admin-toolbar__route"
+                    <span class="wako-admin-toolbar__route wako-admin-toolbar__route--desktop"
                           title="{{ routeName }}">{{ routeName|replace({'frontend.': ''}) }}</span>
                 {% endif %}
 
-                <span class="wako-admin-toolbar__sep" aria-hidden="true"></span>
+                <span class="wako-admin-toolbar__sep wako-admin-toolbar__sep--desktop" aria-hidden="true"></span>
 
                 {# Copy entity ID — only rendered when entityId is available #}
                 {% if entityId %}
-                    <button class="wako-admin-toolbar__btn"
+                    <button class="wako-admin-toolbar__btn wako-admin-toolbar__btn--desktop"
                             data-toolbar-copy-id="true"
                             data-entity-id="{{ entityId }}"
                             type="button"
                             title="{{ 'adminToolbar.copyId'|trans|striptags }}: {{ entityId }}">{{ iconCopy }}
                         #{{ entityId|slice(0, 8) }}</button>
 
-                    <span class="wako-admin-toolbar__sep" aria-hidden="true"></span>
+                    <span class="wako-admin-toolbar__sep wako-admin-toolbar__sep--desktop" aria-hidden="true"></span>
                 {% endif %}
 
                 {# Clear all caches #}
-                <button class="wako-admin-toolbar__btn"
+                <button class="wako-admin-toolbar__btn wako-admin-toolbar__btn--from-md"
                         data-toolbar-feature="clear-cache"
                         data-toolbar-clear-cache="true"
                         type="button"
                         title="{{ 'adminToolbar.clearCache'|trans|striptags }}">{{ iconSync }}</button>
 
-                <span class="wako-admin-toolbar__sep" aria-hidden="true"></span>
+                <span class="wako-admin-toolbar__sep wako-admin-toolbar__sep--from-md" aria-hidden="true"></span>
 
                 <span class="wako-admin-toolbar__dropdown wako-admin-toolbar__dropdown--align-right"
                       data-toolbar-feature="customer-context"
@@ -262,12 +267,53 @@
                             {{ 'adminToolbar.activeRules'|trans|striptags }}
                             <span data-toolbar-customer-rules-count="true">(0)</span>
                         </div>
-                        <ul class="wako-admin-toolbar__rule-list" data-toolbar-customer-rules="true"></ul>
+                        <ul class="wako-admin-toolbar__rule-list wako-admin-toolbar__rule-list--preview"
+                            data-toolbar-customer-rules="true"></ul>
+                        <button class="wako-admin-toolbar__dropdown-more-btn"
+                                data-toolbar-customer-rules-more="true"
+                                type="button"
+                                hidden></button>
                         <div class="wako-admin-toolbar__dropdown-empty"
                              data-toolbar-customer-rules-empty="true">{{ 'adminToolbar.noActiveRules'|trans|striptags }}</div>
                     </div>
                 </div>
             </span>
+
+                <div class="wako-admin-toolbar__modal wako-admin-toolbar__modal--hidden"
+                     data-toolbar-rules-modal="true"
+                     role="dialog"
+                     aria-modal="true"
+                     aria-labelledby="wako-admin-toolbar-rules-modal-title">
+                    <button class="wako-admin-toolbar__modal-backdrop"
+                            data-toolbar-rules-modal-close="true"
+                            type="button"
+                            tabindex="-1"
+                            aria-hidden="true"></button>
+                    <div class="wako-admin-toolbar__modal-dialog" role="document">
+                        <div class="wako-admin-toolbar__modal-header">
+                            <div>
+                                <div class="wako-admin-toolbar__modal-eyebrow">{{ 'adminToolbar.customer'|trans|striptags }}</div>
+                                <h3 class="wako-admin-toolbar__modal-title" id="wako-admin-toolbar-rules-modal-title">
+                                    {{ 'adminToolbar.activeRules'|trans|striptags }}
+                                    <span data-toolbar-rules-modal-count="true">(0)</span>
+                                </h3>
+                            </div>
+                            <button class="wako-admin-toolbar__modal-close"
+                                    data-toolbar-rules-modal-close="true"
+                                    type="button"
+                                    title="{{ 'adminToolbar.closeRulesModal'|trans|striptags }}"
+                                    aria-label="{{ 'adminToolbar.closeRulesModal'|trans|striptags }}">
+                                {{ iconX }}
+                            </button>
+                        </div>
+                        <div class="wako-admin-toolbar__modal-body">
+                            <ul class="wako-admin-toolbar__rule-list wako-admin-toolbar__rule-list--modal"
+                                data-toolbar-rules-modal-list="true"></ul>
+                            <div class="wako-admin-toolbar__dropdown-empty"
+                                 data-toolbar-rules-modal-empty="true">{{ 'adminToolbar.noActiveRules'|trans|striptags }}</div>
+                        </div>
+                    </div>
+                </div>
 
                 <span class="wako-admin-toolbar__sep" aria-hidden="true"></span>
 
