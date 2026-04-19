@@ -1,3 +1,8 @@
+# 1.4.2
+* Added: Added a hint banner to the plugin configuration that points users to the personal toolbar settings page under **Settings → Plugins → Admin Toolbar**
+* Changed: The plugin configuration hint now uses administration snippets for proper locale-aware rendering in Shopware Admin
+* Changed: Improved spacing between the configuration hint text and its action button
+
 # 1.4.1
 * Changed: Cleaned up the storefront SCSS for the admin toolbar without changing the intended feature set
 * Changed: Simplified and clarified responsive toolbar styling to keep the stylesheet easier to maintain
