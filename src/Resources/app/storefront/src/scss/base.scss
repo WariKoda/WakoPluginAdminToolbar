@@ -1,36 +1,87 @@
 // =============================================================================
 // Wako Admin Toolbar
-// All rules scoped under .wako-admin-toolbar to prevent storefront collisions.
 // =============================================================================
 
 $toolbar-height: 36px;
 $toolbar-bg: #116fff;
-$toolbar-color: #ffffff;
-$toolbar-z: 1045; // above Shopware modals (1050) and offcanvas nav (1100)
-$toggle-width: 36px; // collapse button and bubble are identical in size
+$toolbar-color: #fff;
+$toolbar-z: 1045;
+$toggle-width: 36px;
 $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+
+$white-08: rgba(255, 255, 255, 0.08);
+$white-10: rgba(255, 255, 255, 0.10);
+$white-12: rgba(255, 255, 255, 0.12);
+$white-14: rgba(255, 255, 255, 0.14);
+$white-15: rgba(255, 255, 255, 0.15);
+$white-18: rgba(255, 255, 255, 0.18);
+$white-20: rgba(255, 255, 255, 0.20);
+$white-24: rgba(255, 255, 255, 0.24);
+$white-28: rgba(255, 255, 255, 0.28);
+$white-30: rgba(255, 255, 255, 0.30);
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+}
+
+@mixin inline-center {
+    display: inline-flex;
+    align-items: center;
+}
+
+@mixin button-reset {
+    border: 0;
+    background: none;
+    color: $toolbar-color;
+    cursor: pointer;
+}
+
+@mixin hover-bg($bg: $white-12) {
+    &:hover,
+    &:focus {
+        background-color: $bg;
+        outline: none;
+    }
+}
+
+@mixin link-reset {
+    color: $toolbar-color;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        color: $toolbar-color;
+        text-decoration: none;
+    }
+}
+
+@mixin ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@mixin hidden {
+    display: none !important;
+}
 
 .wako-admin-toolbar {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    inset: 0 0 auto;
     width: 100%;
     height: $toolbar-height;
     z-index: $toolbar-z;
-    background-color: $toolbar-bg;
+    background: $toolbar-bg;
     color: $toolbar-color;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 13px;
-    line-height: $toolbar-height;
+    font: 13px / #{$toolbar-height} -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     box-sizing: border-box;
 
-    // Hidden by default — JS removes this class after confirming admin session
-    &--hidden {
-        display: none !important;
+    &--hidden,
+    &__feature--hidden {
+        @include hidden;
     }
 
-    // Collapsed — bar disappears, only the bubble remains
     &--collapsed {
         height: 0;
         overflow: visible;
@@ -45,31 +96,28 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
     }
 
     &__inner {
-        display: flex;
+        @include flex-center;
         justify-content: space-between;
-        align-items: center;
         height: 100%;
-        padding: 0 0 0 4px; // no right padding — toggle button fills that corner
-        max-width: none;
+        padding-left: 4px;
     }
 
     &__left,
-    &__right {
-        display: flex;
-        align-items: center;
+    &__right,
+    &__center {
+        @include flex-center;
         gap: 4px;
-        min-width: 0;
         height: 100%;
+        min-width: 0;
     }
 
-    // Inline SVG icons — shared sizing + vertical alignment
     &__icon {
+        position: relative;
+        top: -1px;
+        display: inline-block;
         width: 16px;
         height: 16px;
         vertical-align: middle;
-        display: inline-block;
-        position: relative;
-        top: -1px;
         fill: currentColor;
         flex-shrink: 0;
     }
@@ -77,28 +125,22 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
     &__home,
     &__link,
     a {
+        @include link-reset;
         height: 100%;
-        color: $toolbar-color;
-        text-decoration: none;
         padding: 0 10px;
         white-space: nowrap;
 
         &:hover,
         &:focus {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: $toolbar-color;
-            text-decoration: none;
+            background: $white-15;
         }
     }
 
-    // Home link contains only the SVG logo — flex-center it vertically
     &__home {
-        display: flex;
-        align-items: center;
+        @include flex-center;
         padding: 0 8px;
     }
 
-    // Shopware signet icon used in the home link and the collapsed bubble
     &__logo {
         display: block;
         width: 20px;
@@ -107,76 +149,51 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
     }
 
     &__nav-links {
+        @include flex-center;
         display: none;
-        align-items: center;
         gap: 4px;
         height: 100%;
 
         &::before {
             content: '|';
-            color: rgba(255, 255, 255, 0.3);
+            color: $white-30;
             padding: 0 4px;
         }
     }
 
-    &__center {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        height: 100%;
-    }
-
-    &__feature--hidden {
-        display: none !important;
-    }
-
-    // Muted pipe separator
     &__sep {
         width: 1px;
         height: 14px;
-        background: rgba(255, 255, 255, 0.2);
-        flex-shrink: 0;
         margin: 0 2px;
+        background: $white-20;
+        flex-shrink: 0;
 
-        &--hidden {
-            display: none;
-        }
-
-        &--desktop {
-            display: none;
-        }
-
+        &--hidden,
+        &--desktop,
         &--from-md {
             display: none;
         }
     }
 
-    // Route name — monospace, small, muted
     &__route {
+        @include ellipsis;
         display: none;
+        max-width: 220px;
         font-family: $mono;
         font-size: 11px;
-        white-space: nowrap;
-        max-width: 220px;
-        overflow: hidden;
-        text-overflow: ellipsis;
         cursor: default;
 
-        &:empty {
-            display: none;
-        }
-
+        &:empty,
         &--desktop {
             display: none;
         }
     }
 
-    // Cache status dot — JS adds --hit or --miss modifier
     &__cache {
-        cursor: default;
-        line-height: 1;
+        @include flex-center;
         display: none;
-        align-items: center;
+        line-height: 1;
+        cursor: default;
 
         .wako-admin-toolbar__icon {
             width: 10px;
@@ -195,69 +212,54 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         }
     }
 
-    // Generic small action button: copy ID, clear cache
     &__btn {
-        background: none;
-        border: none;
-        color: $toolbar-color;
-        cursor: pointer;
-        padding: 0 7px;
-        height: $toolbar-height;
-        font-size: 12px;
-        font-family: $mono;
-        white-space: nowrap;
-        display: inline-flex;
-        align-items: center;
+        @include inline-center;
+        @include button-reset;
+        @include hover-bg;
         gap: 4px;
-
-        &:hover,
-        &:focus {
-            background-color: rgba(255, 255, 255, 0.12);
-            outline: none;
-        }
+        height: $toolbar-height;
+        padding: 0 7px;
+        font: 12px / normal $mono;
+        white-space: nowrap;
 
         &:disabled {
             cursor: default;
             opacity: 0.3;
         }
 
-        &--desktop {
-            display: none;
-        }
-
+        &--desktop,
         &--from-md {
             display: none;
         }
     }
 
     &__user {
-        display: inline-flex;
-        align-items: center;
-        padding: 0 7px;
+        @include inline-center;
+        @include link-reset;
         height: $toolbar-height;
-        color: $toolbar-color;
-        text-decoration: none;
+        padding: 0 7px;
 
         &:hover,
         &:focus {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: $toolbar-color;
-            text-decoration: none;
+            background: $white-15;
         }
     }
 
-    // Collapse button — sits flush in the top-right corner, same footprint as the bubble
-    &__toggle {
-        flex-shrink: 0;
+    &__toggle,
+    &__bubble {
         width: $toggle-width;
         height: $toolbar-height;
-        background: none;
-        border: none;
         color: $toolbar-color;
-        cursor: pointer;
-        display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
+    }
+
+    &__toggle {
+        @include button-reset;
+        display: flex;
+        flex-shrink: 0;
+
         .wako-admin-toolbar__icon {
             width: 10px;
             height: 10px;
@@ -266,26 +268,19 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         &:hover,
         &:focus {
             opacity: 1;
-            background-color: rgba(255, 255, 255, 0.1);
+            background: $white-10;
             outline: none;
         }
     }
 
-    // Collapsed bubble — same width/height as the toggle button, anchored top-right
     &__bubble {
         display: none;
         position: fixed;
         top: 0;
         right: 0;
-        width: $toggle-width;
-        height: $toolbar-height;
-        background-color: $toolbar-bg;
-        color: $toolbar-color;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        user-select: none;
         z-index: $toolbar-z;
+        background: $toolbar-bg;
+        user-select: none;
         transition: filter 0.15s ease;
 
         &:hover,
@@ -295,11 +290,10 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         }
     }
 
-    // Shared dropdown UI (variants + customer context)
+    // Dropdown
     &__dropdown {
+        @include inline-center;
         position: relative;
-        display: inline-flex;
-        align-items: center;
         height: 100%;
 
         &--hidden {
@@ -312,8 +306,7 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         }
 
         &-trigger--static {
-            display: inline-flex;
-            align-items: center;
+            @include inline-center;
             gap: 8px;
             max-width: 280px;
             min-width: 0;
@@ -321,9 +314,7 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         }
 
         &-trigger-text {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            @include ellipsis;
         }
 
         &-menu {
@@ -331,40 +322,39 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
             position: absolute;
             top: 100%;
             left: 0;
-            background-color: $toolbar-bg;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            min-width: 100%;
-            flex-direction: column;
             z-index: 1;
+            min-width: 100%;
             max-height: 500px;
             overflow-y: auto;
-        }
+            flex-direction: column;
+            background: $toolbar-bg;
+            border-top: 1px solid $white-15;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 
-        &-menu--info {
-            min-width: 340px;
-            max-width: min(420px, calc(100vw - 16px));
-            max-height: 360px;
-            line-height: normal;
+            a {
+                display: block;
+                padding: 6px 12px;
+                border-bottom: 1px solid $white-08;
+                font-size: 12px;
+                line-height: 1.4;
+                white-space: nowrap;
+
+                &:last-child {
+                    border-bottom: 0;
+                }
+            }
+
+            &--info {
+                min-width: 340px;
+                max-width: min(420px, calc(100vw - 16px));
+                max-height: 360px;
+                line-height: normal;
+            }
         }
 
         &--align-right &-menu {
-            left: auto;
             right: 0;
-        }
-
-        // Comes after the general `a` rule → wins on cascade at equal specificity (0,1,1)
-        &-menu a {
-            padding: 6px 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            display: block;
-            font-size: 12px;
-            line-height: 1.4;
-            white-space: nowrap;
-
-            &:last-child {
-                border-bottom: none;
-            }
+            left: auto;
         }
 
         &--hover:hover &-menu,
@@ -377,28 +367,32 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
 
     &__dropdown-section {
         padding: 8px 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid $white-08;
         line-height: 1.4;
 
         &:last-child {
-            border-bottom: none;
+            border-bottom: 0;
         }
     }
 
     &__dropdown-label {
+        margin-bottom: 4px;
         font-size: 11px;
         line-height: 1.3;
         letter-spacing: 0.02em;
         text-transform: uppercase;
         opacity: 0.7;
-        margin-bottom: 4px;
     }
 
     &__dropdown-copy-row {
-        display: flex;
-        align-items: center;
+        @include flex-center;
         gap: 8px;
         min-width: 0;
+
+        .wako-admin-toolbar__dropdown-value {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
     }
 
     &__dropdown-value,
@@ -410,23 +404,19 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         word-break: break-word;
     }
 
-    &__dropdown-copy-row &__dropdown-value {
-        flex: 1 1 auto;
-        min-width: 0;
+    &__dropdown-empty {
+        opacity: 0.8;
     }
 
     &__icon-btn {
-        display: inline-flex;
-        align-items: center;
+        @include inline-center;
+        @include button-reset;
+        @include hover-bg;
         justify-content: center;
         width: 24px;
         height: 24px;
         padding: 0;
-        border: none;
         border-radius: 4px;
-        background: none;
-        color: $toolbar-color;
-        cursor: pointer;
         flex-shrink: 0;
         opacity: 0.8;
 
@@ -436,9 +426,7 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
 
         &:hover,
         &:focus {
-            background-color: rgba(255, 255, 255, 0.12);
             opacity: 1;
-            outline: none;
         }
 
         &:disabled {
@@ -447,21 +435,16 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         }
     }
 
-    &__dropdown-empty {
-        opacity: 0.8;
-    }
-
     &__dropdown-more-btn {
-        margin-top: 8px;
-        width: 100%;
-        display: inline-flex;
-        align-items: center;
+        @include inline-center;
         justify-content: center;
+        width: 100%;
         min-height: 30px;
+        margin-top: 8px;
         padding: 6px 10px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        border: 1px solid $white-18;
         border-radius: 6px;
-        background: rgba(255, 255, 255, 0.08);
+        background: $white-08;
         color: $toolbar-color;
         font-size: 12px;
         line-height: 1.3;
@@ -469,20 +452,21 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
 
         &:hover,
         &:focus {
-            background: rgba(255, 255, 255, 0.14);
-            border-color: rgba(255, 255, 255, 0.28);
+            background: $white-14;
+            border-color: $white-28;
             outline: none;
         }
 
         &[hidden] {
-            display: none !important;
+            @include hidden;
         }
     }
 
+    // Rules
     &__rule-list {
-        list-style: none;
         margin: 6px 0 0;
         padding: 0;
+        list-style: none;
         overflow-y: auto;
 
         &--preview {
@@ -490,21 +474,17 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         }
 
         &--modal {
-            margin-top: 0;
             display: flex;
             flex-direction: column;
             gap: 8px;
             max-height: min(60vh, 560px);
+            margin-top: 0;
             padding-right: 4px;
         }
     }
 
     &__rule-item {
-        padding: 6px 0 0;
-
-        &--compact {
-            padding-top: 6px;
-        }
+        padding-top: 6px;
 
         &--detailed {
             padding-top: 0;
@@ -512,17 +492,65 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
     }
 
     &__rule-link {
-        color: $toolbar-color;
-        text-decoration: none;
+        @include link-reset;
         display: block;
 
         &:hover,
         &:focus {
             text-decoration: underline;
-            color: $toolbar-color;
         }
     }
 
+    &__rule-card {
+        @include link-reset;
+        display: block;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid $white-14;
+        border-radius: 10px;
+        background: rgba(7, 30, 76, 0.22);
+        transition: background-color 0.15s ease, border-color 0.15s ease;
+
+        &:hover,
+        &:focus {
+            background: rgba(7, 30, 76, 0.3);
+            border-color: $white-24;
+            outline: none;
+        }
+    }
+
+    &__rule-card-header {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        padding: 12px 14px;
+    }
+
+    &__rule-priority {
+        @include inline-center;
+        justify-content: center;
+        min-width: 42px;
+        padding: 4px 8px;
+        border: 1px solid $white-12;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.09);
+        font: 600 11px / 1.2 $mono;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    &__rule-name {
+        min-width: 0;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.45;
+        letter-spacing: 0.01em;
+        word-break: break-word;
+    }
+
+    // Modal
     &__modal {
         position: fixed;
         inset: 0;
@@ -548,10 +576,10 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
 
     &__modal-dialog {
         position: relative;
-        width: calc(100vw - 24px);
-        max-height: calc(100vh - 24px);
         display: flex;
         flex-direction: column;
+        width: calc(100vw - 24px);
+        max-height: calc(100vh - 24px);
         overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.16);
         border-radius: 14px;
@@ -565,15 +593,20 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         justify-content: space-between;
         gap: 16px;
         padding: 16px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        border-bottom: 1px solid $white-12;
+    }
+
+    &__modal-body {
+        padding: 16px;
+        overflow: hidden;
     }
 
     &__modal-eyebrow {
+        margin-bottom: 6px;
         font-size: 11px;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         opacity: 0.72;
-        margin-bottom: 6px;
     }
 
     &__modal-title {
@@ -585,18 +618,16 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
     }
 
     &__modal-close {
-        display: inline-flex;
-        align-items: center;
+        @include inline-center;
+        @include button-reset;
         justify-content: center;
         width: 36px;
         height: 36px;
-        flex-shrink: 0;
         padding: 0;
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        border: 1px solid $white-14;
         border-radius: 8px;
-        background: rgba(255, 255, 255, 0.08);
-        color: $toolbar-color;
-        cursor: pointer;
+        background: $white-08;
+        flex-shrink: 0;
 
         .wako-admin-toolbar__icon {
             top: 0;
@@ -604,74 +635,11 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
 
         &:hover,
         &:focus {
-            background: rgba(255, 255, 255, 0.14);
+            background: $white-14;
             outline: none;
         }
     }
 
-    &__modal-body {
-        padding: 16px;
-        overflow: hidden;
-    }
-
-    &__rule-card {
-        display: block;
-        padding: 0;
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        border-radius: 10px;
-        background: rgba(7, 30, 76, 0.22);
-        color: $toolbar-color;
-        text-decoration: none;
-        overflow: hidden;
-        transition: background-color 0.15s ease, border-color 0.15s ease;
-
-        &:hover,
-        &:focus {
-            background: rgba(7, 30, 76, 0.3);
-            border-color: rgba(255, 255, 255, 0.24);
-            color: $toolbar-color;
-            text-decoration: none;
-            outline: none;
-        }
-    }
-
-    &__rule-card-header {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        align-items: center;
-        gap: 10px;
-        min-width: 0;
-        padding: 12px 14px;
-    }
-
-    &__rule-priority {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 42px;
-        padding: 4px 8px;
-        border-radius: 6px;
-        background: rgba(255, 255, 255, 0.09);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        font-family: $mono;
-        font-size: 11px;
-        font-weight: 600;
-        line-height: 1.2;
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-
-    &__rule-name {
-        min-width: 0;
-        font-size: 13px;
-        font-weight: 600;
-        line-height: 1.45;
-        word-break: break-word;
-        letter-spacing: 0.01em;
-    }
-
-
-    // AB 576px = SM / SMALL
     @include media-breakpoint-up(sm) {
         &__modal {
             padding: 20px;
@@ -688,7 +656,6 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         }
     }
 
-    // AB 768 = MD / MEDIUM
     @include media-breakpoint-up(md) {
         &__route:not(.wako-admin-toolbar__route--desktop) {
             display: block;
@@ -707,7 +674,6 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         }
     }
 
-    // AB 992 = LG / LARGE
     @include media-breakpoint-up(lg) {
         &__nav-links {
             display: flex;
@@ -725,13 +691,8 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
             display: block;
         }
     }
-
-    // AB 1200 = XL / XTRA LARGE
-    @include media-breakpoint-up(xl) {}
 }
 
-// Push body content down when toolbar is expanded.
-// JS also sets padding-top directly as a :has()-less fallback.
 body:has(.wako-admin-toolbar:not(.wako-admin-toolbar--hidden):not(.wako-admin-toolbar--collapsed)) {
     padding-top: $toolbar-height !important;
 }
