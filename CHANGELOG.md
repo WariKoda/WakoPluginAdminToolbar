@@ -1,3 +1,9 @@
+# 1.4.0
+* Changed: Active rules in the customer context now show all rules from the current SalesChannelContext instead of filtering to assigned core rule usages
+* Changed: Customer context rule preview now shows the top 5 rules by priority and opens a dedicated modal for the full list
+* Changed: Refined the active rules modal and rule card design to better match the admin toolbar style while staying compact
+* Changed: Toolbar responsive behavior was reworked with Bootstrap breakpoint mixins; navigation links, route display, copy-id, and cache actions now appear only on larger viewports as intended
+
 # 1.3.1
 * Changed: Refactored `AdminToolbarAuthController` into dedicated toolbar services for session resolution, privilege evaluation, capability building, variant loading, customer context loading, and active rule lookup
 * Changed: Introduced a dedicated `ToolbarSession` value object to replace the previous array-based toolbar session state
