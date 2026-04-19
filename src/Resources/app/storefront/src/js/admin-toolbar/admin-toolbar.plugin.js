@@ -1,6 +1,7 @@
 import Plugin from 'src/plugin-system/plugin.class';
 
 const STORAGE_KEY = 'wako.admin-toolbar.collapsed';
+const RULE_PREVIEW_LIMIT = 5;
 
 export default class AdminToolbarPlugin extends Plugin {
 
@@ -43,6 +44,8 @@ export default class AdminToolbarPlugin extends Plugin {
 
     _showToolbar(session, collapsed) {
         this._permissions = session?.permissions ?? {};
+        this._ruleModalOpen = false;
+        this._boundRuleModalKeydown = this._handleRuleModalKeydown.bind(this);
 
         this.el.classList.remove('wako-admin-toolbar--hidden');
         this.el.classList.toggle('wako-admin-toolbar--collapsed', collapsed);
@@ -54,6 +57,7 @@ export default class AdminToolbarPlugin extends Plugin {
         this._initClearCache();
         this._initToggle();
         this._initVariantsDropdown();
+        this._initRuleModal();
         this._initCustomerContext();
     }
 
@@ -370,7 +374,6 @@ export default class AdminToolbarPlugin extends Plugin {
     _populateCustomerContext(dropdown, customer, activeRules) {
         if (!dropdown) return;
 
-        const adminBaseUrl = this.el.dataset.adminBaseUrl ?? '';
         const name = dropdown.querySelector('[data-toolbar-customer-name]');
         const customerNumber = dropdown.querySelector('[data-toolbar-customer-number]');
         const email = dropdown.querySelector('[data-toolbar-customer-email]');
@@ -379,12 +382,19 @@ export default class AdminToolbarPlugin extends Plugin {
         const rulesCount = dropdown.querySelector('[data-toolbar-customer-rules-count]');
         const rulesList = dropdown.querySelector('[data-toolbar-customer-rules]');
         const emptyState = dropdown.querySelector('[data-toolbar-customer-rules-empty]');
+        const rulesMoreButton = dropdown.querySelector('[data-toolbar-customer-rules-more]');
+        const modalCount = this.el.querySelector('[data-toolbar-rules-modal-count]');
+        const modalList = this.el.querySelector('[data-toolbar-rules-modal-list]');
+        const modalEmptyState = this.el.querySelector('[data-toolbar-rules-modal-empty]');
 
         const displayName = customer.displayName
             ?? [customer.firstName, customer.lastName].filter(Boolean).join(' ').trim();
 
         const customerNumberValue = `${customer.customerNumber ?? ''}`.trim();
         const emailValue = `${customer.email ?? ''}`.trim();
+        const previewRules = activeRules.slice(0, RULE_PREVIEW_LIMIT);
+        const remainingRulesCount = Math.max(activeRules.length - RULE_PREVIEW_LIMIT, 0);
+        const totalRulesCount = activeRules.length;
 
         if (name) name.textContent = displayName;
         if (customerNumber) customerNumber.textContent = customerNumberValue;
@@ -392,39 +402,147 @@ export default class AdminToolbarPlugin extends Plugin {
         if (customerNumberCopy) customerNumberCopy.disabled = customerNumberValue === '';
         if (emailCopy) emailCopy.disabled = emailValue === '';
         if (rulesCount) rulesCount.textContent = `(${activeRules.length})`;
+        if (modalCount) modalCount.textContent = `(${activeRules.length})`;
 
-        if (rulesList) {
-            rulesList.textContent = '';
+        this._renderRuleList(rulesList, previewRules, { compact: true });
+        this._renderRuleList(modalList, activeRules, { compact: false });
 
-            activeRules.forEach(rule => {
-                const item = document.createElement('li');
-                item.className = 'wako-admin-toolbar__rule-item';
+        if (emptyState) {
+            emptyState.style.display = activeRules.length > 0 ? 'none' : '';
+        }
 
+        if (modalEmptyState) {
+            modalEmptyState.style.display = activeRules.length > 0 ? 'none' : '';
+        }
+
+        if (rulesMoreButton) {
+            if (remainingRulesCount > 0) {
+                rulesMoreButton.hidden = false;
+                rulesMoreButton.textContent = this._getShowAllRulesLabel(totalRulesCount);
+                rulesMoreButton.onclick = (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this._openRuleModal();
+                };
+            } else {
+                rulesMoreButton.hidden = true;
+                rulesMoreButton.textContent = '';
+                rulesMoreButton.onclick = null;
+            }
+        }
+
+        dropdown.classList.add('wako-admin-toolbar__dropdown--loaded');
+    }
+
+    _renderRuleList(container, rules, { compact = false } = {}) {
+        if (!container) return;
+
+        const adminBaseUrl = this.el.dataset.adminBaseUrl ?? '';
+        container.textContent = '';
+
+        rules.forEach((rule) => {
+            const item = document.createElement('li');
+            item.className = compact
+                ? 'wako-admin-toolbar__rule-item wako-admin-toolbar__rule-item--compact'
+                : 'wako-admin-toolbar__rule-item wako-admin-toolbar__rule-item--detailed';
+
+            const name = `${rule.name ?? rule.id ?? ''}`.trim();
+            const priority = Number.isFinite(rule.priority) ? `${rule.priority}` : '';
+            const title = [name, rule.id].filter(Boolean).join('\n');
+
+            if (compact) {
                 if (adminBaseUrl && rule.id) {
                     const link = document.createElement('a');
                     link.className = 'wako-admin-toolbar__rule-link';
                     link.href = `${adminBaseUrl}#/sw/settings/rule/detail/${rule.id}`;
                     link.target = '_blank';
                     link.rel = 'noopener noreferrer';
-                    link.textContent = rule.name ?? rule.id;
-                    link.title = rule.id;
+                    link.textContent = name || rule.id;
+                    link.title = title;
                     item.appendChild(link);
                 } else {
-                    item.textContent = rule.name ?? rule.id;
-                    if (rule.id) {
-                        item.title = rule.id;
-                    }
+                    item.textContent = name || rule.id;
+                    item.title = title;
                 }
 
-                rulesList.appendChild(item);
-            });
-        }
+                container.appendChild(item);
+                return;
+            }
 
-        if (emptyState) {
-            emptyState.style.display = activeRules.length > 0 ? 'none' : '';
-        }
+            const itemContent = adminBaseUrl && rule.id
+                ? document.createElement('a')
+                : document.createElement('div');
 
-        dropdown.classList.add('wako-admin-toolbar__dropdown--loaded');
+            itemContent.className = 'wako-admin-toolbar__rule-card';
+
+            if (itemContent instanceof HTMLAnchorElement) {
+                itemContent.href = `${adminBaseUrl}#/sw/settings/rule/detail/${rule.id}`;
+                itemContent.target = '_blank';
+                itemContent.rel = 'noopener noreferrer';
+                itemContent.title = title;
+            }
+
+            const header = document.createElement('div');
+            header.className = 'wako-admin-toolbar__rule-card-header';
+
+            const priorityBadge = document.createElement('span');
+            priorityBadge.className = 'wako-admin-toolbar__rule-priority';
+            priorityBadge.textContent = priority;
+            header.appendChild(priorityBadge);
+
+            const nameEl = document.createElement('span');
+            nameEl.className = 'wako-admin-toolbar__rule-name';
+            nameEl.textContent = name || rule.id;
+            header.appendChild(nameEl);
+
+            itemContent.appendChild(header);
+            item.appendChild(itemContent);
+            container.appendChild(item);
+        });
+    }
+
+    _getShowAllRulesLabel(count) {
+        const template = this.el.dataset.rulesShowAllLabel ?? 'Show all %count%';
+
+        return template.replace('%count%', count);
+    }
+
+    _initRuleModal() {
+        const modal = this.el.querySelector('[data-toolbar-rules-modal]');
+        if (!modal) return;
+
+        modal.querySelectorAll('[data-toolbar-rules-modal-close]').forEach((button) => {
+            button.addEventListener('click', () => this._closeRuleModal());
+        });
+    }
+
+    _openRuleModal() {
+        const modal = this.el.querySelector('[data-toolbar-rules-modal]');
+        if (!modal || this._ruleModalOpen) return;
+
+        modal.classList.remove('wako-admin-toolbar__modal--hidden');
+        document.body.classList.add('wako-admin-toolbar-modal-open');
+        document.addEventListener('keydown', this._boundRuleModalKeydown);
+        this._ruleModalOpen = true;
+
+        const closeButton = modal.querySelector('.wako-admin-toolbar__modal-close');
+        closeButton?.focus();
+    }
+
+    _closeRuleModal() {
+        const modal = this.el.querySelector('[data-toolbar-rules-modal]');
+        if (!modal || !this._ruleModalOpen) return;
+
+        modal.classList.add('wako-admin-toolbar__modal--hidden');
+        document.body.classList.remove('wako-admin-toolbar-modal-open');
+        document.removeEventListener('keydown', this._boundRuleModalKeydown);
+        this._ruleModalOpen = false;
+    }
+
+    _handleRuleModalKeydown(event) {
+        if (event.key === 'Escape') {
+            this._closeRuleModal();
+        }
     }
 
     // -------------------------------------------------------------------------

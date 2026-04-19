@@ -24,6 +24,8 @@
         "email": "Email",
         "copyEmail": "Copy email",
         "activeRules": "Active rules",
+        "showAllRules": "Show all %count%",
+        "closeRulesModal": "Close rule overview",
         "noActiveRules": "No active rules in the current context"
     }
 }

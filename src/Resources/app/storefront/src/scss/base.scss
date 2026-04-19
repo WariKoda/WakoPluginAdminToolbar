@@ -107,7 +107,7 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
     }
 
     &__nav-links {
-        display: flex;
+        display: none;
         align-items: center;
         gap: 4px;
         height: 100%;
@@ -141,10 +141,19 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         &--hidden {
             display: none;
         }
+
+        &--desktop {
+            display: none;
+        }
+
+        &--from-md {
+            display: none;
+        }
     }
 
     // Route name — monospace, small, muted
     &__route {
+        display: none;
         font-family: $mono;
         font-size: 11px;
         white-space: nowrap;
@@ -156,13 +165,17 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         &:empty {
             display: none;
         }
+
+        &--desktop {
+            display: none;
+        }
     }
 
     // Cache status dot — JS adds --hit or --miss modifier
     &__cache {
         cursor: default;
         line-height: 1;
-        display: flex;
+        display: none;
         align-items: center;
 
         .wako-admin-toolbar__icon {
@@ -206,6 +219,14 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         &:disabled {
             cursor: default;
             opacity: 0.3;
+        }
+
+        &--desktop {
+            display: none;
+        }
+
+        &--from-md {
+            display: none;
         }
     }
 
@@ -430,15 +451,64 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         opacity: 0.8;
     }
 
+    &__dropdown-more-btn {
+        margin-top: 8px;
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 30px;
+        padding: 6px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        color: $toolbar-color;
+        font-size: 12px;
+        line-height: 1.3;
+        cursor: pointer;
+
+        &:hover,
+        &:focus {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.28);
+            outline: none;
+        }
+
+        &[hidden] {
+            display: none !important;
+        }
+    }
+
     &__rule-list {
         list-style: none;
         margin: 6px 0 0;
         padding: 0;
         overflow-y: auto;
+
+        &--preview {
+            max-height: none;
+        }
+
+        &--modal {
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: min(60vh, 560px);
+            padding-right: 4px;
+        }
     }
 
     &__rule-item {
         padding: 6px 0 0;
+
+        &--compact {
+            padding-top: 6px;
+        }
+
+        &--detailed {
+            padding-top: 0;
+        }
     }
 
     &__rule-link {
@@ -453,25 +523,219 @@ $mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
         }
     }
 
-    // Hide dev info on small screens
-    @media (max-width: 768px) {
-        &__route,
-        &__cache {
+    &__modal {
+        position: fixed;
+        inset: 0;
+        z-index: $toolbar-z + 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        line-height: normal;
+
+        &--hidden {
             display: none;
         }
     }
 
-    // Hide nav + context links on very small screens
-    @media (max-width: 576px) {
-        &__nav-links,
-        &__center {
-            display: none;
+    &__modal-backdrop {
+        position: absolute;
+        inset: 0;
+        border: 0;
+        background: rgba(4, 19, 47, 0.62);
+        cursor: pointer;
+    }
+
+    &__modal-dialog {
+        position: relative;
+        width: calc(100vw - 24px);
+        max-height: calc(100vh - 24px);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 14px;
+        background: linear-gradient(180deg, #0f63df 0%, #0b56c7 100%);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    &__modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    &__modal-eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.72;
+        margin-bottom: 6px;
+    }
+
+    &__modal-title {
+        margin: 0;
+        color: $toolbar-color;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    &__modal-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        padding: 0;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        color: $toolbar-color;
+        cursor: pointer;
+
+        .wako-admin-toolbar__icon {
+            top: 0;
+        }
+
+        &:hover,
+        &:focus {
+            background: rgba(255, 255, 255, 0.14);
+            outline: none;
         }
     }
+
+    &__modal-body {
+        padding: 16px;
+        overflow: hidden;
+    }
+
+    &__rule-card {
+        display: block;
+        padding: 0;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        background: rgba(7, 30, 76, 0.22);
+        color: $toolbar-color;
+        text-decoration: none;
+        overflow: hidden;
+        transition: background-color 0.15s ease, border-color 0.15s ease;
+
+        &:hover,
+        &:focus {
+            background: rgba(7, 30, 76, 0.3);
+            border-color: rgba(255, 255, 255, 0.24);
+            color: $toolbar-color;
+            text-decoration: none;
+            outline: none;
+        }
+    }
+
+    &__rule-card-header {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        padding: 12px 14px;
+    }
+
+    &__rule-priority {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 42px;
+        padding: 4px 8px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.09);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        font-family: $mono;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.2;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    &__rule-name {
+        min-width: 0;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.45;
+        word-break: break-word;
+        letter-spacing: 0.01em;
+    }
+
+
+    // AB 576px = SM / SMALL
+    @include media-breakpoint-up(sm) {
+        &__modal {
+            padding: 20px;
+        }
+
+        &__modal-dialog {
+            width: min(760px, calc(100vw - 32px));
+            max-height: min(80vh, 760px);
+        }
+
+        &__modal-header,
+        &__modal-body {
+            padding: 20px;
+        }
+    }
+
+    // AB 768 = MD / MEDIUM
+    @include media-breakpoint-up(md) {
+        &__route:not(.wako-admin-toolbar__route--desktop) {
+            display: block;
+        }
+
+        &__cache {
+            display: flex;
+        }
+
+        &__btn--from-md {
+            display: inline-flex;
+        }
+
+        &__sep--from-md {
+            display: block;
+        }
+    }
+
+    // AB 992 = LG / LARGE
+    @include media-breakpoint-up(lg) {
+        &__nav-links {
+            display: flex;
+        }
+
+        &__route--desktop {
+            display: block;
+        }
+
+        &__btn--desktop {
+            display: inline-flex;
+        }
+
+        &__sep--desktop {
+            display: block;
+        }
+    }
+
+    // AB 1200 = XL / XTRA LARGE
+    @include media-breakpoint-up(xl) {}
 }
 
 // Push body content down when toolbar is expanded.
 // JS also sets padding-top directly as a :has()-less fallback.
 body:has(.wako-admin-toolbar:not(.wako-admin-toolbar--hidden):not(.wako-admin-toolbar--collapsed)) {
     padding-top: $toolbar-height !important;
+}
+
+body.wako-admin-toolbar-modal-open {
+    overflow: hidden;
 }
