@@ -2,10 +2,12 @@
   "base": "/bundles/wakopluginadmintoolbar/administration/",
   "entryPoints": {
     "wako-plugin-admin-toolbar": {
-      "css": [],
+      "css": [
+        "/bundles/wakopluginadmintoolbar/administration/assets/wako-plugin-admin-toolbar-BfGaFLJL.css"
+      ],
       "dynamic": [],
       "js": [
-        "/bundles/wakopluginadmintoolbar/administration/assets/wako-plugin-admin-toolbar-Cnu8N8Wu.js"
+        "/bundles/wakopluginadmintoolbar/administration/assets/wako-plugin-admin-toolbar-laYefihM.js"
       ],
       "legacy": false,
       "preload": []

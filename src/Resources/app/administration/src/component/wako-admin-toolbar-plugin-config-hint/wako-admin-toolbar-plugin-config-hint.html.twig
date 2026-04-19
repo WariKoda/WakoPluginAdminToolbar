@@ -1,0 +1,17 @@
+<div class="wako-admin-toolbar-plugin-config-hint">
+    <mt-banner variant="info">
+        <strong v-if="snippetPrefix">{{ $t(snippetPrefix + '.headline') }}</strong>
+        <p v-if="snippetPrefix" class="wako-admin-toolbar-plugin-config-hint__text">
+            {{ $t(snippetPrefix + '.description') }}
+        </p>
+
+        <mt-button
+            v-if="snippetPrefix && routeName"
+            size="small"
+            variant="primary"
+            @click="openSettingsPage"
+        >
+            {{ $t(snippetPrefix + '.buttonLabel') }}
+        </mt-button>
+    </mt-banner>
+</div>

@@ -4,13 +4,22 @@
 
     <card>
         <title>Admin Toolbar Settings</title>
+        <title lang="en-GB">Admin Toolbar Settings</title>
         <title lang="de-DE">Admin Toolbar Einstellungen</title>
+
+        <component name="wako-admin-toolbar-plugin-config-hint">
+            <name>settingsLocationHint</name>
+            <snippetPrefix>wako-admin-toolbar.pluginConfigHint</snippetPrefix>
+            <routeName>wako.admin.toolbar.settings.index</routeName>
+        </component>
 
         <input-field type="text">
             <name>adminBasePath</name>
             <label>Admin Base Path</label>
+            <label lang="en-GB">Admin Base Path</label>
             <label lang="de-DE">Admin Basispfad</label>
             <helpText>URL path where the Shopware Administration is served. Default: /admin</helpText>
+            <helpText lang="en-GB">URL path where the Shopware Administration is served. Default: /admin</helpText>
             <helpText lang="de-DE">URL-Pfad unter dem die Shopware Administration erreichbar ist. Standard: /admin</helpText>
             <defaultValue>/admin</defaultValue>
         </input-field>

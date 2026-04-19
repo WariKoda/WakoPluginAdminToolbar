@@ -1,8 +1,11 @@
 {
   "main.js": {
-    "file": "assets/wako-plugin-admin-toolbar-Cnu8N8Wu.js",
+    "file": "assets/wako-plugin-admin-toolbar-laYefihM.js",
     "name": "wako-plugin-admin-toolbar",
     "src": "main.js",
-    "isEntry": true
+    "isEntry": true,
+    "css": [
+      "assets/wako-plugin-admin-toolbar-BfGaFLJL.css"
+    ]
   }
 }
