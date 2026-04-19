@@ -1,3 +1,7 @@
+# 1.4.1
+* Changed: Cleaned up the storefront SCSS for the admin toolbar without changing the intended feature set
+* Changed: Simplified and clarified responsive toolbar styling to keep the stylesheet easier to maintain
+
 # 1.4.0
 * Changed: Active rules in the customer context now show all rules from the current SalesChannelContext instead of filtering to assigned core rule usages
 * Changed: Customer context rule preview now shows the top 5 rules by priority and opens a dedicated modal for the full list
