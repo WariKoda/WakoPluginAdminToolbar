@@ -42,9 +42,13 @@ class AdminToolbarAuthController
             return $this->response(Response::HTTP_NO_CONTENT);
         }
 
+        $salesChannelId = $request->hasSession()
+            ? (string) $request->getSession()->get(PlatformRequest::ATTRIBUTE_SALES_CHANNEL_ID, '')
+            : '';
+
         return $this->jsonResponse([
             'enabled' => true,
-            'permissions' => $this->capabilitiesBuilder->build($toolbarSession),
+            'permissions' => $this->capabilitiesBuilder->build($toolbarSession, $salesChannelId ?: null),
         ]);
     }
 

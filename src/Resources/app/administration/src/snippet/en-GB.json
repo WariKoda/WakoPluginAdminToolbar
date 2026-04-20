@@ -2,7 +2,7 @@
     "wako-admin-toolbar": {
         "pluginConfigHint": {
             "headline": "Personal toolbar settings are configured elsewhere",
-            "description": "The enable/disable setting for the storefront admin toolbar is configured per administration user under Settings > Plugins > Admin Toolbar. This plugin configuration only contains global settings such as the admin base path.",
+            "description": "The enable/disable setting for the storefront admin toolbar is configured per administration user under Settings > Plugins > Admin Toolbar. This plugin configuration contains global settings such as the admin base path as well as privacy and data access settings for the customer context.",
             "buttonLabel": "Open admin toolbar user settings"
         },
         "profile": {

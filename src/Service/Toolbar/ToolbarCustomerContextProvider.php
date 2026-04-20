@@ -5,6 +5,7 @@ namespace WakoPluginAdminToolbar\Service\Toolbar;
 use Shopware\Core\PlatformRequest;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextServiceInterface;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextServiceParameters;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\HttpFoundation\Request;
 use WakoPluginAdminToolbar\Struct\ToolbarSession;
 
@@ -13,6 +14,7 @@ final class ToolbarCustomerContextProvider
     public function __construct(
         private readonly SalesChannelContextServiceInterface $salesChannelContextService,
         private readonly ActiveRuleProvider $activeRuleProvider,
+        private readonly SystemConfigService $systemConfigService,
     ) {}
 
     /**
@@ -22,8 +24,8 @@ final class ToolbarCustomerContextProvider
      *         displayName: string,
      *         firstName: string,
      *         lastName: string,
-     *         customerNumber: string,
-     *         email: string
+     *         customerNumber?: string,
+     *         email?: string
      *     },
      *     activeRules: array<int, array{id: string, name: string, priority: int}>
      * }|null
@@ -59,18 +61,39 @@ final class ToolbarCustomerContextProvider
             return null;
         }
 
+        $showEmail          = $this->systemConfigService->getBool(
+            'WakoPluginAdminToolbar.config.customerContextShowEmail',
+            $salesChannelId,
+        );
+        $showCustomerNumber = $this->systemConfigService->getBool(
+            'WakoPluginAdminToolbar.config.customerContextShowCustomerNumber',
+            $salesChannelId,
+        );
+        $showRules          = $includeRules && $this->systemConfigService->getBool(
+            'WakoPluginAdminToolbar.config.customerContextShowRules',
+            $salesChannelId,
+        );
+
         $displayName = trim($customer->getFirstName() . ' ' . $customer->getLastName());
 
+        $customerData = [
+            'id'          => (string) $customer->getId(),
+            'displayName' => $displayName,
+            'firstName'   => (string) $customer->getFirstName(),
+            'lastName'    => (string) $customer->getLastName(),
+        ];
+
+        if ($showCustomerNumber) {
+            $customerData['customerNumber'] = (string) $customer->getCustomerNumber();
+        }
+
+        if ($showEmail) {
+            $customerData['email'] = (string) $customer->getEmail();
+        }
+
         return [
-            'customer' => [
-                'id' => (string) $customer->getId(),
-                'displayName' => $displayName,
-                'firstName' => (string) $customer->getFirstName(),
-                'lastName' => (string) $customer->getLastName(),
-                'customerNumber' => (string) $customer->getCustomerNumber(),
-                'email' => (string) $customer->getEmail(),
-            ],
-            'activeRules' => $includeRules
+            'customer'    => $customerData,
+            'activeRules' => $showRules
                 ? $this->activeRuleProvider->loadAssignedRules(
                     $salesChannelContext->getRuleIds(),
                     $salesChannelContext->getContext(),

@@ -358,12 +358,14 @@ export default class AdminToolbarPlugin extends Plugin {
 
             if (response.status !== 200) {
                 this._customerContextUnavailable = true;
+                this._showCustomerNoContext(dropdown);
                 return;
             }
 
             const data = await response.json();
             if (!data?.customer) {
                 this._customerContextUnavailable = true;
+                this._showCustomerNoContext(dropdown);
                 return;
             }
 
@@ -376,8 +378,23 @@ export default class AdminToolbarPlugin extends Plugin {
         }
     }
 
+    _showCustomerNoContext(dropdown) {
+        if (!dropdown) return;
+
+        const noContext = dropdown.querySelector('[data-toolbar-customer-no-context]');
+        if (noContext) noContext.hidden = false;
+
+        dropdown.classList.add('wako-admin-toolbar__dropdown--loaded');
+    }
+
     _populateCustomerContext(dropdown, customer, activeRules) {
         if (!dropdown) return;
+
+        const noContext = dropdown.querySelector('[data-toolbar-customer-no-context]');
+        if (noContext) noContext.hidden = true;
+
+        const content = dropdown.querySelector('[data-toolbar-customer-content]');
+        if (content) content.hidden = false;
 
         const name = dropdown.querySelector('[data-toolbar-customer-name]');
         const customerNumber = dropdown.querySelector('[data-toolbar-customer-number]');
