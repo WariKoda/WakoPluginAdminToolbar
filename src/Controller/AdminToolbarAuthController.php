@@ -56,6 +56,10 @@ class AdminToolbarAuthController
     )]
     public function clearCache(Request $request): Response
     {
+        if (!$this->isSameOrigin($request)) {
+            return $this->response(Response::HTTP_FORBIDDEN);
+        }
+
         $toolbarSession = $this->toolbarSessionResolver->resolveAuthorized($request);
         if ($toolbarSession === null || !$this->permissionService->canClearCache($toolbarSession)) {
             return $this->response(Response::HTTP_FORBIDDEN);
@@ -111,6 +115,42 @@ class AdminToolbarAuthController
         }
 
         return $this->jsonResponse($customerContext);
+    }
+
+    /**
+     * Defense-in-depth for state-changing storefront-accessible endpoints.
+     *
+     * Accepts either Origin or Referer when scheme/host/port match exactly.
+     * Requests without both headers are rejected.
+     */
+    private function isSameOrigin(Request $request): bool
+    {
+        $source = $request->headers->get('Origin') ?: $request->headers->get('Referer');
+        if (!is_string($source) || $source === '') {
+            return false;
+        }
+
+        $sourceParts = parse_url($source);
+        if ($sourceParts === false) {
+            return false;
+        }
+
+        $sourceScheme = $sourceParts['scheme'] ?? null;
+        $sourceHost = $sourceParts['host'] ?? null;
+        if (!is_string($sourceScheme) || !is_string($sourceHost) || $sourceScheme === '' || $sourceHost === '') {
+            return false;
+        }
+
+        $requestPort = $request->getPort();
+        $sourcePort = isset($sourceParts['port']) ? (int) $sourceParts['port'] : null;
+
+        if ($sourcePort === null) {
+            $sourcePort = $sourceScheme === 'https' ? 443 : ($sourceScheme === 'http' ? 80 : 0);
+        }
+
+        return $sourceScheme === $request->getScheme()
+            && strtolower($sourceHost) === strtolower($request->getHost())
+            && $sourcePort === $requestPort;
     }
 
     /**
