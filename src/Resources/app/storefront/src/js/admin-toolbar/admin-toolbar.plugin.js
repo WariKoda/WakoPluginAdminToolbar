@@ -43,7 +43,12 @@ export default class AdminToolbarPlugin extends Plugin {
     }
 
     _showToolbar(session, collapsed) {
+        const rawAdminBaseUrl = this.el.dataset.adminBaseUrl ?? '';
+
         this._permissions = session?.permissions ?? {};
+        this._adminBaseUrl = rawAdminBaseUrl.startsWith('http://') || rawAdminBaseUrl.startsWith('https://')
+            ? rawAdminBaseUrl
+            : '';
         this._ruleModalOpen = false;
         this._boundRuleModalKeydown = this._handleRuleModalKeydown.bind(this);
 
@@ -291,9 +296,9 @@ export default class AdminToolbarPlugin extends Plugin {
 
     async _loadVariants(dropdown) {
         const parentId = dropdown.dataset.toolbarVariants;
-        const adminBaseUrl = dropdown.dataset.adminBaseUrl;
+        const adminBaseUrl = this._adminBaseUrl;
         const menu = dropdown.querySelector('.wako-admin-toolbar__dropdown-menu');
-        if (!menu || !parentId) return;
+        if (!menu || !parentId || !adminBaseUrl) return;
 
         try {
             const response = await fetch(`/admin/toolbar-variants/${encodeURIComponent(parentId)}`, {
@@ -437,7 +442,7 @@ export default class AdminToolbarPlugin extends Plugin {
     _renderRuleList(container, rules, { compact = false } = {}) {
         if (!container) return;
 
-        const adminBaseUrl = this.el.dataset.adminBaseUrl ?? '';
+        const adminBaseUrl = this._adminBaseUrl;
         container.textContent = '';
 
         rules.forEach((rule) => {
