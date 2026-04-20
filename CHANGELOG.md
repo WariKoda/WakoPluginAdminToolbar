@@ -1,3 +1,11 @@
+# 1.4.3
+* Added: New plugin configuration card **Privacy & Data Access** with per-field toggles for customer email, customer number, and active rules in the customer context (email and rules disabled by default)
+* Added: Customer context dropdown now shows an explicit "Not logged in as customer" empty state when no customer is in session
+* Security: Clear-cache action now enforces same-origin protection to mitigate cross-site request risks
+* Security: Hardened admin toolbar links against unsafe `adminBasePath` configuration values
+* Changed: Customer context capability and payload are now gated by the new privacy toggles, so disabled fields are neither resolved server-side nor rendered in the storefront
+* Changed: Improved padding of the "no customer context" empty state in the customer dropdown
+
 # 1.4.2
 * Added: Added a hint banner to the plugin configuration that points users to the personal toolbar settings page under **Settings → Plugins → Admin Toolbar**
 * Changed: The plugin configuration hint now uses administration snippets for proper locale-aware rendering in Shopware Admin
