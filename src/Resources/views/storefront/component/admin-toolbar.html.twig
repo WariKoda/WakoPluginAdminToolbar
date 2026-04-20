@@ -8,6 +8,9 @@
     {% set toolbarExtension = page.extensions.wakoAdminToolbar %}
     {% set adminBasePath = config('WakoPluginAdminToolbar.config.adminBasePath') %}
     {% set adminBasePath = adminBasePath is not empty ? adminBasePath : '/admin' %}
+    {% if adminBasePath|slice(0, 1) != '/' %}
+        {% set adminBasePath = '/admin' %}
+    {% endif %}
     {% set adminBaseUrl = app.request.attributes.get('sw-sales-channel-absolute-base-url') ~ adminBasePath %}
 
     {% set pageType  = toolbarExtension ? toolbarExtension['pageType']  : 'generic' %}
@@ -133,8 +136,7 @@
                         {% if parentId %}
                             <span class="wako-admin-toolbar__dropdown"
                                   data-toolbar-feature="edit-product"
-                                  data-toolbar-variants="{{ parentId }}"
-                                  data-admin-base-url="{{ adminBaseUrl }}">
+                                  data-toolbar-variants="{{ parentId }}">
                             <a href="{{ adminBaseUrl }}#/sw/product/detail/{{ targetId }}"
                                target="_blank" rel="noopener noreferrer"
                                class="wako-admin-toolbar__link wako-admin-toolbar__dropdown-trigger">
