@@ -30,6 +30,7 @@
 
         <service id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarCapabilitiesBuilder">
             <argument type="service" id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarPermissionService"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
 
         <service id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarSessionResolver">
@@ -50,6 +51,7 @@
         <service id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarCustomerContextProvider">
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
             <argument type="service" id="WakoPluginAdminToolbar\Service\Toolbar\ActiveRuleProvider"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
 
         <service id="WakoPluginAdminToolbar\Controller\AdminToolbarAuthController">

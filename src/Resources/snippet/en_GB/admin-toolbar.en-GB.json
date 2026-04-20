@@ -26,6 +26,7 @@
         "activeRules": "Active rules",
         "showAllRules": "Show all %count%",
         "closeRulesModal": "Close rule overview",
-        "noActiveRules": "No active rules in the current context"
+        "noActiveRules": "No active rules in the current context",
+        "noCustomerContext": "Not logged in as customer"
     }
 }

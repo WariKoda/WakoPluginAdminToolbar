@@ -226,63 +226,72 @@
                 </span>
 
                 <div class="wako-admin-toolbar__dropdown-menu wako-admin-toolbar__dropdown-menu--info">
-                    <div class="wako-admin-toolbar__dropdown-section">
-                        <div
-                            class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.customerName'|trans|striptags }}</div>
-                        <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-name="true"></div>
-                    </div>
 
-                    <div class="wako-admin-toolbar__dropdown-section">
-                        <div
-                            class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.customerNumber'|trans|striptags }}</div>
-                        <div class="wako-admin-toolbar__dropdown-copy-row">
-                            <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-number="true"></div>
-                            <button class="wako-admin-toolbar__icon-btn wako-admin-toolbar__icon-btn--copy"
-                                    data-toolbar-copy-customer-number="true"
+                    <div class="wako-admin-toolbar__dropdown-empty"
+                         data-toolbar-customer-no-context="true"
+                         hidden>{{ 'adminToolbar.noCustomerContext'|trans|striptags }}</div>
+
+                    <div data-toolbar-customer-content="true" hidden>
+                        <div class="wako-admin-toolbar__dropdown-section">
+                            <div
+                                class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.customerName'|trans|striptags }}</div>
+                            <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-name="true"></div>
+                        </div>
+
+                        <div class="wako-admin-toolbar__dropdown-section">
+                            <div
+                                class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.customerNumber'|trans|striptags }}</div>
+                            <div class="wako-admin-toolbar__dropdown-copy-row">
+                                <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-number="true"></div>
+                                <button class="wako-admin-toolbar__icon-btn wako-admin-toolbar__icon-btn--copy"
+                                        data-toolbar-copy-customer-number="true"
+                                        type="button"
+                                        title="{{ 'adminToolbar.copyCustomerNumber'|trans|striptags }}"
+                                        aria-label="{{ 'adminToolbar.copyCustomerNumber'|trans|striptags }}"
+                                        disabled>
+                                    {{ iconCopy }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="wako-admin-toolbar__dropdown-section">
+                            <div
+                                class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.email'|trans|striptags }}</div>
+                            <div class="wako-admin-toolbar__dropdown-copy-row">
+                                <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-email="true"></div>
+                                <button class="wako-admin-toolbar__icon-btn wako-admin-toolbar__icon-btn--copy"
+                                        data-toolbar-copy-customer-email="true"
+                                        type="button"
+                                        title="{{ 'adminToolbar.copyEmail'|trans|striptags }}"
+                                        aria-label="{{ 'adminToolbar.copyEmail'|trans|striptags }}"
+                                        disabled>
+                                    {{ iconCopy }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="wako-admin-toolbar__dropdown-section" data-toolbar-feature="view-rules">
+                            <div class="wako-admin-toolbar__dropdown-label">
+                                {{ 'adminToolbar.activeRules'|trans|striptags }}
+                                <span data-toolbar-customer-rules-count="true">(0)</span>
+                            </div>
+                            <ul class="wako-admin-toolbar__rule-list wako-admin-toolbar__rule-list--preview"
+                                data-toolbar-customer-rules="true"></ul>
+                            <button class="wako-admin-toolbar__dropdown-more-btn"
+                                    data-toolbar-customer-rules-more="true"
                                     type="button"
-                                    title="{{ 'adminToolbar.copyCustomerNumber'|trans|striptags }}"
-                                    aria-label="{{ 'adminToolbar.copyCustomerNumber'|trans|striptags }}"
-                                    disabled>
-                                {{ iconCopy }}
-                            </button>
+                                    hidden></button>
+                            <div class="wako-admin-toolbar__dropdown-empty"
+                                 data-toolbar-customer-rules-empty="true">{{ 'adminToolbar.noActiveRules'|trans|striptags }}</div>
                         </div>
                     </div>
 
-                    <div class="wako-admin-toolbar__dropdown-section">
-                        <div
-                            class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.email'|trans|striptags }}</div>
-                        <div class="wako-admin-toolbar__dropdown-copy-row">
-                            <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-email="true"></div>
-                            <button class="wako-admin-toolbar__icon-btn wako-admin-toolbar__icon-btn--copy"
-                                    data-toolbar-copy-customer-email="true"
-                                    type="button"
-                                    title="{{ 'adminToolbar.copyEmail'|trans|striptags }}"
-                                    aria-label="{{ 'adminToolbar.copyEmail'|trans|striptags }}"
-                                    disabled>
-                                {{ iconCopy }}
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="wako-admin-toolbar__dropdown-section" data-toolbar-feature="view-rules">
-                        <div class="wako-admin-toolbar__dropdown-label">
-                            {{ 'adminToolbar.activeRules'|trans|striptags }}
-                            <span data-toolbar-customer-rules-count="true">(0)</span>
-                        </div>
-                        <ul class="wako-admin-toolbar__rule-list wako-admin-toolbar__rule-list--preview"
-                            data-toolbar-customer-rules="true"></ul>
-                        <button class="wako-admin-toolbar__dropdown-more-btn"
-                                data-toolbar-customer-rules-more="true"
-                                type="button"
-                                hidden></button>
-                        <div class="wako-admin-toolbar__dropdown-empty"
-                             data-toolbar-customer-rules-empty="true">{{ 'adminToolbar.noActiveRules'|trans|striptags }}</div>
-                    </div>
                 </div>
             </span>
 
                 <div class="wako-admin-toolbar__modal wako-admin-toolbar__modal--hidden"
                      data-toolbar-rules-modal="true"
+                     data-toolbar-feature="customer-context"
                      role="dialog"
                      aria-modal="true"
                      aria-labelledby="wako-admin-toolbar-rules-modal-title">

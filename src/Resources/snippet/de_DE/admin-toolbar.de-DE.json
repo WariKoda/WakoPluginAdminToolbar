@@ -26,6 +26,7 @@
         "activeRules": "Aktive Regeln",
         "showAllRules": "Alle %count% anzeigen",
         "closeRulesModal": "Regelübersicht schließen",
-        "noActiveRules": "Keine aktiven Regeln im aktuellen Kontext"
+        "noActiveRules": "Keine aktiven Regeln im aktuellen Kontext",
+        "noCustomerContext": "Sie sind nicht als Kunde eingeloggt"
     }
 }
