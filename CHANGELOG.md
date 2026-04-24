@@ -1,3 +1,12 @@
+# 1.5.0
+* Added: Personal per-user feature preferences for product links, category links, CMS/layout links, and customer context in the Admin Toolbar settings module
+* Added: Global plugin configuration switches for product edit links, category links, and CMS/layout links, with server-side capability enforcement
+* Changed: The plugin configuration card **Privacy & Data Access** was renamed to **Customer Context**
+* Changed: Navigation pages can now show both the category edit link and the assigned Shopping Experience link when both targets are available
+* Changed: Customer context dropdown sections for email, customer number, and active rules are now rendered only when the corresponding plugin configuration is enabled
+* Changed: Toolbar separators in the right section were simplified and are now only rendered next to the always-visible route/copy actions and visible cache/customer-context actions
+* Security: Feature preferences and global feature switches are enforced server-side when building toolbar capabilities and handling privileged toolbar actions
+
 # 1.4.3
 * Added: New plugin configuration card **Privacy & Data Access** with per-field toggles for customer email, customer number, and active rules in the customer context (email and rules disabled by default)
 * Added: Customer context dropdown now shows an explicit "Not logged in as customer" empty state when no customer is in session

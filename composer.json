@@ -2,7 +2,7 @@
   "name": "wako/plugin-admin-toolbar",
   "description": "Admin Toolbar for Shopware Storefront",
   "type": "shopware-platform-plugin",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "license": "MIT",
   "authors": [
     {
