@@ -13,6 +13,25 @@ class CustomFieldInstaller
     public const SET_NAME   = 'wako_admin_toolbar';
     public const FIELD_NAME = 'wako_admin_toolbar_enabled';
 
+    private const FEATURE_FIELDS = [
+        'wako_admin_toolbar_feature_product_links' => [
+            'en-GB' => 'Show product edit links',
+            'de-DE' => 'Produkt-Bearbeitungslinks anzeigen',
+        ],
+        'wako_admin_toolbar_feature_category_links' => [
+            'en-GB' => 'Show category links',
+            'de-DE' => 'Kategorie-Links anzeigen',
+        ],
+        'wako_admin_toolbar_feature_cms_links' => [
+            'en-GB' => 'Show CMS and layout links',
+            'de-DE' => 'CMS- und Layout-Links anzeigen',
+        ],
+        'wako_admin_toolbar_feature_customer_context' => [
+            'en-GB' => 'Show customer context',
+            'de-DE' => 'Kundenkontext anzeigen',
+        ],
+    ];
+
     public function __construct(
         private readonly EntityRepository $customFieldSetRepository,
     ) {}
@@ -25,6 +44,37 @@ class CustomFieldInstaller
 
         if ($this->customFieldSetRepository->searchIds($criteria, $context)->getTotal() > 0) {
             return;
+        }
+
+        $customFields = [
+            [
+                'name'   => self::FIELD_NAME,
+                'type'   => CustomFieldTypes::BOOL,
+                'config' => [
+                    'label' => [
+                        'en-GB' => 'Admin toolbar enabled',
+                        'de-DE' => 'Admin-Toolbar aktiviert',
+                    ],
+                    'componentName'   => 'sw-field',
+                    'customFieldType' => 'checkbox',
+                    'customFieldPosition' => 1,
+                ],
+            ],
+        ];
+
+        $position = 2;
+        foreach (self::FEATURE_FIELDS as $name => $label) {
+            $customFields[] = [
+                'name'   => $name,
+                'type'   => CustomFieldTypes::BOOL,
+                'config' => [
+                    'label' => $label,
+                    'componentName' => 'sw-field',
+                    'customFieldType' => 'checkbox',
+                    'customFieldPosition' => $position,
+                ],
+            ];
+            ++$position;
         }
 
         $this->customFieldSetRepository->create([
@@ -40,21 +90,7 @@ class CustomFieldInstaller
                 'relations' => [
                     ['entityName' => 'user'],
                 ],
-                'customFields' => [
-                    [
-                        'name'   => self::FIELD_NAME,
-                        'type'   => CustomFieldTypes::BOOL,
-                        'config' => [
-                            'label' => [
-                                'en-GB' => 'Admin toolbar enabled',
-                                'de-DE' => 'Admin-Toolbar aktiviert',
-                            ],
-                            'componentName'   => 'sw-field',
-                            'customFieldType' => 'checkbox',
-                            'customFieldPosition' => 1,
-                        ],
-                    ],
-                ],
+                'customFields' => $customFields,
             ],
         ], $context);
     }

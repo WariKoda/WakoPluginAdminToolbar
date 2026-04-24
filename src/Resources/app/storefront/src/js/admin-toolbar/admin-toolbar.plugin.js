@@ -84,7 +84,6 @@ export default class AdminToolbarPlugin extends Plugin {
         });
 
         this._toggleContainerVisibility('.wako-admin-toolbar__center');
-        this._updateSeparators();
     }
 
     _hasPermission(permissionKey) {
@@ -101,40 +100,6 @@ export default class AdminToolbarPlugin extends Plugin {
         container.classList.toggle('wako-admin-toolbar__feature--hidden', !hasVisibleChildren);
     }
 
-    _updateSeparators() {
-        const container = this.el.querySelector('.wako-admin-toolbar__right');
-        if (!container) return;
-
-        const children = Array.from(container.children);
-
-        children.forEach((child, index) => {
-            if (!child.classList.contains('wako-admin-toolbar__sep')) {
-                return;
-            }
-
-            const previous = this._findVisibleSibling(children, index, -1);
-            const next = this._findVisibleSibling(children, index, 1);
-            const shouldShow = !!previous
-                && !!next
-                && !previous.classList.contains('wako-admin-toolbar__sep')
-                && !next.classList.contains('wako-admin-toolbar__sep');
-
-            child.classList.toggle('wako-admin-toolbar__sep--hidden', !shouldShow);
-        });
-    }
-
-    _findVisibleSibling(children, startIndex, direction) {
-        for (let index = startIndex + direction; index >= 0 && index < children.length; index += direction) {
-            const child = children[index];
-            if (child.classList.contains('wako-admin-toolbar__feature--hidden')) {
-                continue;
-            }
-
-            return child;
-        }
-
-        return null;
-    }
 
     // -------------------------------------------------------------------------
     // Copy actions

@@ -27,9 +27,49 @@
     </card>
 
     <card>
-        <title>Privacy &amp; Data Access</title>
-        <title lang="en-GB">Privacy &amp; Data Access</title>
-        <title lang="de-DE">Datenschutz &amp; Datenzugriff</title>
+        <title>Toolbar Features</title>
+        <title lang="en-GB">Toolbar Features</title>
+        <title lang="de-DE">Toolbar-Funktionen</title>
+
+        <input-field type="bool">
+            <name>featureCategoryLinksEnabled</name>
+            <label>Enable category links</label>
+            <label lang="en-GB">Enable category links</label>
+            <label lang="de-DE">Kategorielinks aktivieren</label>
+            <helpText>If disabled, category links are unavailable for all users, regardless of personal settings and ACL permissions.</helpText>
+            <helpText lang="en-GB">If disabled, category links are unavailable for all users, regardless of personal settings and ACL permissions.</helpText>
+            <helpText lang="de-DE">Wenn deaktiviert, sind Kategorielinks für alle Benutzer nicht verfügbar, unabhängig von persönlichen Einstellungen und ACL-Berechtigungen.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>featureProductLinksEnabled</name>
+            <label>Enable product edit links</label>
+            <label lang="en-GB">Enable product edit links</label>
+            <label lang="de-DE">Produkt-Bearbeitungslinks aktivieren</label>
+            <helpText>If disabled, product edit links and variant loading are unavailable for all users, regardless of personal settings and ACL permissions.</helpText>
+            <helpText lang="en-GB">If disabled, product edit links and variant loading are unavailable for all users, regardless of personal settings and ACL permissions.</helpText>
+            <helpText lang="de-DE">Wenn deaktiviert, sind Produkt-Bearbeitungslinks und das Laden von Varianten für alle Benutzer nicht verfügbar, unabhängig von persönlichen Einstellungen und ACL-Berechtigungen.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>featureCmsLinksEnabled</name>
+            <label>Enable CMS and layout links</label>
+            <label lang="en-GB">Enable CMS and layout links</label>
+            <label lang="de-DE">CMS- und Layout-Links aktivieren</label>
+            <helpText>If disabled, CMS, layout and shopping experience links are unavailable for all users, regardless of personal settings and ACL permissions.</helpText>
+            <helpText lang="en-GB">If disabled, CMS, layout and shopping experience links are unavailable for all users, regardless of personal settings and ACL permissions.</helpText>
+            <helpText lang="de-DE">Wenn deaktiviert, sind CMS-, Layout- und Erlebniswelt-Links für alle Benutzer nicht verfügbar, unabhängig von persönlichen Einstellungen und ACL-Berechtigungen.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+    </card>
+
+    <card>
+        <title>Customer Context</title>
+        <title lang="en-GB">Customer Context</title>
+        <title lang="de-DE">Kundenkontext</title>
 
         <input-field type="bool">
             <name>customerContextShowEmail</name>
@@ -39,7 +79,7 @@
             <helpText>If enabled, the customer email address is transmitted to the storefront toolbar. Disabled by default to minimise exposure of personal data.</helpText>
             <helpText lang="en-GB">If enabled, the customer email address is transmitted to the storefront toolbar. Disabled by default to minimise exposure of personal data.</helpText>
             <helpText lang="de-DE">Wenn aktiviert, wird die E-Mail-Adresse des Kunden an die Storefront-Toolbar übermittelt. Standardmäßig deaktiviert, um die Exposition personenbezogener Daten zu minimieren.</helpText>
-            <defaultValue>false</defaultValue>
+            <defaultValue>true</defaultValue>
         </input-field>
 
         <input-field type="bool">
@@ -61,7 +101,7 @@
             <helpText>If enabled, the names and priorities of active pricing, shipping and discount rules are transmitted to the storefront toolbar. Disabled by default to avoid exposing internal business logic.</helpText>
             <helpText lang="en-GB">If enabled, the names and priorities of active pricing, shipping and discount rules are transmitted to the storefront toolbar. Disabled by default to avoid exposing internal business logic.</helpText>
             <helpText lang="de-DE">Wenn aktiviert, werden Namen und Prioritäten aktiver Preis-, Versand- und Rabattregeln an die Storefront-Toolbar übermittelt. Standardmäßig deaktiviert, um interne Geschäftslogik nicht zu exponieren.</helpText>
-            <defaultValue>false</defaultValue>
+            <defaultValue>true</defaultValue>
         </input-field>
 
     </card>

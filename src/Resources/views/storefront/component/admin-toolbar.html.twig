@@ -18,6 +18,12 @@
     {% set parentId  = toolbarExtension ? toolbarExtension['parentId']  : null %}
     {% set cmsPageId = toolbarExtension ? toolbarExtension['cmsPageId'] : null %}
     {% set routeName = app.request.attributes.get('_route') %}
+    {% set customerContextShowEmailConfig = config('WakoPluginAdminToolbar.config.customerContextShowEmail') %}
+    {% set customerContextShowCustomerNumberConfig = config('WakoPluginAdminToolbar.config.customerContextShowCustomerNumber') %}
+    {% set customerContextShowRulesConfig = config('WakoPluginAdminToolbar.config.customerContextShowRules') %}
+    {% set customerContextShowEmail = customerContextShowEmailConfig is null ? false : customerContextShowEmailConfig %}
+    {% set customerContextShowCustomerNumber = customerContextShowCustomerNumberConfig is null ? true : customerContextShowCustomerNumberConfig %}
+    {% set customerContextShowRules = customerContextShowRulesConfig is null ? false : customerContextShowRulesConfig %}
 
     {#
     /page/cms/{id} is rendered by CmsController::pageFull() which fires no
@@ -158,16 +164,19 @@
                                class="wako-admin-toolbar__link"
                                data-toolbar-feature="edit-cms-page">{{ iconContent }} {{ 'adminToolbar.editLayout'|trans|striptags }}</a>
                         {% endif %}
-                    {% elseif pageType == 'navigation' and cmsPageId %}
-                        <a href="{{ adminBaseUrl }}#/sw/cms/detail/{{ cmsPageId }}" target="_blank"
-                           rel="noopener noreferrer"
-                           class="wako-admin-toolbar__link"
-                           data-toolbar-feature="edit-cms-page">{{ iconContent }} {{ 'adminToolbar.editShoppingExperience'|trans|striptags }}</a>
-                    {% elseif pageType == 'navigation' and entityId %}
-                        <a href="{{ adminBaseUrl }}#/sw/category/index/{{ entityId }}" target="_blank"
-                           rel="noopener noreferrer"
-                           class="wako-admin-toolbar__link"
-                           data-toolbar-feature="edit-category">{{ iconContent }} {{ 'adminToolbar.editCategory'|trans|striptags }}</a>
+                    {% elseif pageType == 'navigation' and (entityId or cmsPageId) %}
+                        {% if entityId %}
+                            <a href="{{ adminBaseUrl }}#/sw/category/index/{{ entityId }}" target="_blank"
+                               rel="noopener noreferrer"
+                               class="wako-admin-toolbar__link"
+                               data-toolbar-feature="edit-category">{{ iconContent }} {{ 'adminToolbar.editCategory'|trans|striptags }}</a>
+                        {% endif %}
+                        {% if cmsPageId %}
+                            <a href="{{ adminBaseUrl }}#/sw/cms/detail/{{ cmsPageId }}" target="_blank"
+                               rel="noopener noreferrer"
+                               class="wako-admin-toolbar__link"
+                               data-toolbar-feature="edit-cms-page">{{ iconContent }} {{ 'adminToolbar.editShoppingExperience'|trans|striptags }}</a>
+                        {% endif %}
                     {% elseif pageType == 'landingPage' and cmsPageId %}
                         <a href="{{ adminBaseUrl }}#/sw/cms/detail/{{ cmsPageId }}" target="_blank"
                            rel="noopener noreferrer"
@@ -188,9 +197,8 @@
                 {% if routeName %}
                     <span class="wako-admin-toolbar__route wako-admin-toolbar__route--desktop"
                           title="{{ routeName }}">{{ routeName|replace({'frontend.': ''}) }}</span>
+                    <span class="wako-admin-toolbar__sep wako-admin-toolbar__sep--desktop" aria-hidden="true"></span>
                 {% endif %}
-
-                <span class="wako-admin-toolbar__sep wako-admin-toolbar__sep--desktop" aria-hidden="true"></span>
 
                 {# Copy entity ID — only rendered when entityId is available #}
                 {% if entityId %}
@@ -200,18 +208,19 @@
                             type="button"
                             title="{{ 'adminToolbar.copyId'|trans|striptags }}: {{ entityId }}">{{ iconCopy }}
                         #{{ entityId|slice(0, 8) }}</button>
-
                     <span class="wako-admin-toolbar__sep wako-admin-toolbar__sep--desktop" aria-hidden="true"></span>
+
                 {% endif %}
 
                 {# Clear all caches #}
-                <button class="wako-admin-toolbar__btn wako-admin-toolbar__btn--from-md"
+                <button class="wako-admin-toolbar__btn"
                         data-toolbar-feature="clear-cache"
                         data-toolbar-clear-cache="true"
                         type="button"
                         title="{{ 'adminToolbar.clearCache'|trans|striptags }}">{{ iconSync }}</button>
-
-                <span class="wako-admin-toolbar__sep wako-admin-toolbar__sep--from-md" aria-hidden="true"></span>
+                <span class="wako-admin-toolbar__sep wako-admin-toolbar__sep--visible"
+                      data-toolbar-feature="clear-cache"
+                      aria-hidden="true"></span>
 
                 <span class="wako-admin-toolbar__dropdown wako-admin-toolbar__dropdown--align-right"
                       data-toolbar-feature="customer-context"
@@ -238,56 +247,66 @@
                             <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-name="true"></div>
                         </div>
 
-                        <div class="wako-admin-toolbar__dropdown-section">
-                            <div
-                                class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.customerNumber'|trans|striptags }}</div>
-                            <div class="wako-admin-toolbar__dropdown-copy-row">
-                                <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-number="true"></div>
-                                <button class="wako-admin-toolbar__icon-btn wako-admin-toolbar__icon-btn--copy"
-                                        data-toolbar-copy-customer-number="true"
-                                        type="button"
-                                        title="{{ 'adminToolbar.copyCustomerNumber'|trans|striptags }}"
-                                        aria-label="{{ 'adminToolbar.copyCustomerNumber'|trans|striptags }}"
-                                        disabled>
-                                    {{ iconCopy }}
-                                </button>
+                        {% if customerContextShowCustomerNumber %}
+                            <div class="wako-admin-toolbar__dropdown-section">
+                                <div
+                                    class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.customerNumber'|trans|striptags }}</div>
+                                <div class="wako-admin-toolbar__dropdown-copy-row">
+                                    <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-number="true"></div>
+                                    <button class="wako-admin-toolbar__icon-btn wako-admin-toolbar__icon-btn--copy"
+                                            data-toolbar-copy-customer-number="true"
+                                            type="button"
+                                            title="{{ 'adminToolbar.copyCustomerNumber'|trans|striptags }}"
+                                            aria-label="{{ 'adminToolbar.copyCustomerNumber'|trans|striptags }}"
+                                            disabled>
+                                        {{ iconCopy }}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
 
-                        <div class="wako-admin-toolbar__dropdown-section">
-                            <div
-                                class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.email'|trans|striptags }}</div>
-                            <div class="wako-admin-toolbar__dropdown-copy-row">
-                                <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-email="true"></div>
-                                <button class="wako-admin-toolbar__icon-btn wako-admin-toolbar__icon-btn--copy"
-                                        data-toolbar-copy-customer-email="true"
-                                        type="button"
-                                        title="{{ 'adminToolbar.copyEmail'|trans|striptags }}"
-                                        aria-label="{{ 'adminToolbar.copyEmail'|trans|striptags }}"
-                                        disabled>
-                                    {{ iconCopy }}
-                                </button>
+                        {% if customerContextShowEmail %}
+                            <div class="wako-admin-toolbar__dropdown-section">
+                                <div
+                                    class="wako-admin-toolbar__dropdown-label">{{ 'adminToolbar.email'|trans|striptags }}</div>
+                                <div class="wako-admin-toolbar__dropdown-copy-row">
+                                    <div class="wako-admin-toolbar__dropdown-value" data-toolbar-customer-email="true"></div>
+                                    <button class="wako-admin-toolbar__icon-btn wako-admin-toolbar__icon-btn--copy"
+                                            data-toolbar-copy-customer-email="true"
+                                            type="button"
+                                            title="{{ 'adminToolbar.copyEmail'|trans|striptags }}"
+                                            aria-label="{{ 'adminToolbar.copyEmail'|trans|striptags }}"
+                                            disabled>
+                                        {{ iconCopy }}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
 
-                        <div class="wako-admin-toolbar__dropdown-section" data-toolbar-feature="view-rules">
-                            <div class="wako-admin-toolbar__dropdown-label">
-                                {{ 'adminToolbar.activeRules'|trans|striptags }}
-                                <span data-toolbar-customer-rules-count="true">(0)</span>
+                        {% if customerContextShowRules %}
+                            <div class="wako-admin-toolbar__dropdown-section" data-toolbar-feature="view-rules">
+                                <div class="wako-admin-toolbar__dropdown-label">
+                                    {{ 'adminToolbar.activeRules'|trans|striptags }}
+                                    <span data-toolbar-customer-rules-count="true">(0)</span>
+                                </div>
+                                <ul class="wako-admin-toolbar__rule-list wako-admin-toolbar__rule-list--preview"
+                                    data-toolbar-customer-rules="true"></ul>
+                                <button class="wako-admin-toolbar__dropdown-more-btn"
+                                        data-toolbar-customer-rules-more="true"
+                                        type="button"
+                                        hidden></button>
+                                <div class="wako-admin-toolbar__dropdown-empty"
+                                     data-toolbar-customer-rules-empty="true">{{ 'adminToolbar.noActiveRules'|trans|striptags }}</div>
                             </div>
-                            <ul class="wako-admin-toolbar__rule-list wako-admin-toolbar__rule-list--preview"
-                                data-toolbar-customer-rules="true"></ul>
-                            <button class="wako-admin-toolbar__dropdown-more-btn"
-                                    data-toolbar-customer-rules-more="true"
-                                    type="button"
-                                    hidden></button>
-                            <div class="wako-admin-toolbar__dropdown-empty"
-                                 data-toolbar-customer-rules-empty="true">{{ 'adminToolbar.noActiveRules'|trans|striptags }}</div>
-                        </div>
+                        {% endif %}
                     </div>
 
                 </div>
             </span>
+
+                <span class="wako-admin-toolbar__sep wako-admin-toolbar__sep--visible"
+                      data-toolbar-feature="customer-context"
+                      aria-hidden="true"></span>
 
                 <div class="wako-admin-toolbar__modal wako-admin-toolbar__modal--hidden"
                      data-toolbar-rules-modal="true"
@@ -325,8 +344,6 @@
                         </div>
                     </div>
                 </div>
-
-                <span class="wako-admin-toolbar__sep" aria-hidden="true"></span>
 
                 <button class="wako-admin-toolbar__toggle"
                         data-toolbar-toggle="true"

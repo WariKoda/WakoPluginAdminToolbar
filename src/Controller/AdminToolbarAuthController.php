@@ -7,6 +7,7 @@ use Shopware\Core\Framework\Adapter\Cache\CacheClearer;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\PlatformRequest;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,7 @@ class AdminToolbarAuthController
         private readonly ToolbarVariantService $toolbarVariantService,
         private readonly ToolbarCustomerContextProvider $customerContextProvider,
         private readonly CacheClearer $cacheClearer,
+        private readonly SystemConfigService $systemConfigService,
     ) {}
 
     #[Route(
@@ -85,6 +87,7 @@ class AdminToolbarAuthController
         $toolbarSession = $this->toolbarSessionResolver->resolveAuthorized($request);
         if ($toolbarSession === null
             || !$this->permissionService->canLoadVariants($toolbarSession)
+            || !$this->isFeatureEnabled('featureProductLinksEnabled', $request)
             || !Uuid::isValid($parentId)
         ) {
             return $this->jsonResponse(['variants' => []], Response::HTTP_FORBIDDEN);
@@ -119,6 +122,17 @@ class AdminToolbarAuthController
         }
 
         return $this->jsonResponse($customerContext);
+    }
+
+    private function isFeatureEnabled(string $feature, Request $request): bool
+    {
+        $salesChannelId = $request->hasSession()
+            ? (string) $request->getSession()->get(PlatformRequest::ATTRIBUTE_SALES_CHANNEL_ID, '')
+            : '';
+        $key = \sprintf('WakoPluginAdminToolbar.config.%s', $feature);
+        $value = $this->systemConfigService->get($key, $salesChannelId ?: null);
+
+        return $value === null || $value === true;
     }
 
     /**
