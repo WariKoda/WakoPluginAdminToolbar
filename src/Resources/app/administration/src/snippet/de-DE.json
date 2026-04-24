@@ -1,9 +1,9 @@
 {
     "wako-admin-toolbar": {
         "pluginConfigHint": {
-            "headline": "Die persönliche Toolbar-Konfiguration befindet sich an anderer Stelle",
-            "description": "Die Aktivierung der Storefront Admin Toolbar wird pro Administrationsbenutzer unter Einstellungen > Plugins > Admin Toolbar konfiguriert. Diese Plugin-Konfiguration enthält globale Einstellungen wie den Admin-Basispfad sowie Datenschutz- und Datenzugriffseinstellungen für den Kundenkontext.",
-            "buttonLabel": "Admin-Toolbar Benutzereinstellungen öffnen"
+            "headline": "Globale Toolbar-Einstellungen",
+            "description": "Hier werden globale Vorgaben konfiguriert. Persönliche Sichtbarkeit und Feature-Auswahl verwalten Benutzer unter Einstellungen > Plugins > Admin Toolbar.",
+            "buttonLabel": "Persönliche Toolbar-Einstellungen öffnen"
         },
         "profile": {
             "cardTitle": "Admin Toolbar",
