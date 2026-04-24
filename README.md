@@ -26,6 +26,8 @@ The toolbar can provide:
 - active rule visibility
 - copy-to-clipboard helpers
 - cache clear action
+- global feature switches for product links, category links, and CMS/layout links
+- per-user feature preferences for product links, category links, CMS/layout links, and customer context
 
 ## Security & Permission Model
 
@@ -36,6 +38,7 @@ This plugin must adhere to the Shopware Administration **roles, permissions, and
 - All privileged actions are enforced **server-side**
 - UI visibility is only convenience, not authorization
 - The user custom field `wako_admin_toolbar_enabled` is only an opt-in toggle
+- Per-user feature preferences and global plugin switches are additional gates, not authorization by themselves
 - Toolbar access also requires Shopware ACL privileges
 - New privileged features must integrate with ACL end-to-end
 
@@ -51,17 +54,17 @@ The plugin registers the role permission:
 
 ## Feature to privilege mapping
 
-| Feature | Required privilege(s) |
-|---|---|
-| Use toolbar at all | `wako_admin_toolbar:use` |
-| Clear cache | `system:clear:cache` |
-| Load variants | `product:read` |
-| Edit product | `product:update` |
-| Edit category | `category:update` |
-| Edit CMS page / layout / shopping experience / page | `cms_page:update` |
-| Edit landing page | `cms_page:update` + `landing_page:update` |
-| View customer context | `customer:read` |
-| View active rules / rule links | `rule:read` |
+| Feature | Required privilege(s) | Additional gates |
+|---|---|---|
+| Use toolbar at all | `wako_admin_toolbar:use` | Per-user toolbar opt-in |
+| Clear cache | `system:clear:cache` | — |
+| Load variants | `product:read` | Product links enabled globally and for the user |
+| Edit product | `product:update` | Product links enabled globally and for the user |
+| Edit category | `category:update` | Category links enabled globally and for the user |
+| Edit CMS page / layout / shopping experience / page | `cms_page:update` | CMS/layout links enabled globally and for the user |
+| Edit landing page | `cms_page:update` + `landing_page:update` | CMS/layout links enabled globally and for the user |
+| View customer context | `customer:read` | Customer context enabled for the user and at least one customer context data field enabled globally |
+| View active rules / rule links | `rule:read` | Customer context enabled for the user and active rules enabled globally |
 
 ## Development rule for future changes
 
@@ -82,18 +85,29 @@ Location:
 
 Current scope:
 - enable or disable the storefront admin toolbar for the own account
-- show a prepared "Available features" section with disabled placeholders for future per-feature toggles
+- configure personal visibility preferences for product links, category links, CMS/layout links, and customer context
+- show disabled feature toggles when the user lacks the required ACL permission or a feature is disabled globally
 
 The module itself is available with:
 - `user.update_profile`
 
-Changing the toolbar activation requires:
+Changing toolbar activation and feature preferences requires:
 - `user_change_me`
 - `wako_admin_toolbar:use`
+- the corresponding feature ACL permission when enabling a feature
 
 Notes:
 - the toolbar activation setting is no longer edited in the Shopware profile page
-- future per-feature user preferences should be added to this dedicated settings module
+- personal feature preferences are stored on the current user and are enforced server-side when toolbar capabilities are built
+
+## Plugin configuration
+
+The plugin configuration contains:
+- `adminBasePath` for the Administration base path
+- global toolbar feature switches for product links, category links, and CMS/layout links
+- customer context data controls for email, customer number, and active rules
+
+The customer context dropdown only renders sections whose data fields are enabled in the plugin configuration.
 
 ## Relevant files
 

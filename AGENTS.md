@@ -36,14 +36,14 @@ The toolbar now uses a **minimal auth endpoint plus dedicated server-side action
 | Component | Path | Purpose |
 |-----------|------|---------|
 | Plugin bootstrap | `src/WakoPluginAdminToolbar.php` | Install/uninstall custom fields via `CustomFieldInstaller` and enrich Shopware ACL privileges |
-| Custom field installer | `src/Installer/CustomFieldInstaller.php` | Creates `wako_admin_toolbar` custom field set on `user` entity with boolean `wako_admin_toolbar_enabled` |
+| Custom field installer | `src/Installer/CustomFieldInstaller.php` | Creates `wako_admin_toolbar` custom field set on `user` entity with toolbar enablement and per-feature preference fields |
 | Auth/action controller | `src/Controller/AdminToolbarAuthController.php` | Resolves toolbar session, validates JWT, evaluates ACL roles/privileges, serves capability flags, clears cache, loads variants, and returns customer context |
 | Page data subscriber | `src/Subscriber/ToolbarPageDataSubscriber.php` | Attaches `wakoAdminToolbar` extension to page structs (pageType, entityId, parentId, cmsPageId) |
 | Twig template | `src/Resources/views/storefront/component/admin-toolbar.html.twig` | Full toolbar markup with context-aware admin links and dropdown shells annotated for feature-level permission gating |
 | Storefront JS | `src/Resources/app/storefront/src/js/admin-toolbar/admin-toolbar.plugin.js` | `AdminToolbarPlugin` — session check, capability gating, copy ID, clear cache, variant dropdown, lazy customer context, collapse/expand |
 | SCSS | `src/Resources/app/storefront/src/scss/base.scss` | All styles scoped under `.wako-admin-toolbar` |
 | Admin ACL registration | `src/Resources/app/administration/src/acl/` | Registers plugin privileges in the Shopware administration role editor |
-| Admin settings module | `src/Resources/app/administration/src/module/wako-admin-toolbar-settings/` | Current-user admin module for toolbar enable/disable and future per-feature preferences |
+| Admin settings module | `src/Resources/app/administration/src/module/wako-admin-toolbar-settings/` | Current-user admin module for toolbar enable/disable and per-feature preferences, gated by ACL and plugin config |
 
 ### Page Type Detection
 
@@ -60,6 +60,8 @@ The subscriber listens to:
 - **Context links:** Edit Product / Edit Layout / Edit Category / Edit Landing Page / Edit Shopping Experience (context-aware)
 - **Variant dropdown:** On variant product pages, lazy-loads sibling variants on hover via `/admin/toolbar-variants/{parentId}`
 - **Customer context:** Lazy-loads customer info and active rules on first dropdown interaction
+- **Per-user feature preferences:** Users can show/hide product links, category links, CMS/layout links, and customer context in the dedicated settings module
+- **Global feature switches:** Plugin config can disable product links, category links, and CMS/layout links for all users
 - **Route name display:** Shows current Symfony route (stripped of `frontend.` prefix)
 - **Copy entity ID:** Copies current entity UUID to clipboard
 - **Clear cache:** Calls `DELETE /admin/toolbar-clear-cache` server-side
@@ -90,6 +92,10 @@ This plugin must always adhere to the Shopware Administration role and privilege
 - Customer context: `customer:read`
 - Active rules list / rule detail links: `rule:read`
 
+Effective feature availability is additionally gated by:
+- per-user feature preferences stored on the `user` custom fields
+- global plugin configuration for product links, category links, CMS/layout links, and customer context data fields
+
 #### Implementation requirements for future work
 
 When adding a new action, endpoint, admin route, or toolbar button:
@@ -108,7 +114,7 @@ When adding a new action, endpoint, admin route, or toolbar button:
 - Current-user toolbar preferences belong in the dedicated administration module, not in the Shopware profile page
 - Translation snippets in `src/Resources/snippet/{locale}/` (storefront) and `src/Resources/app/administration/src/snippet/` (admin)
 - Both `en-GB` and `de-DE` snippets are mandatory for all user-facing strings
-- Plugin config in `config.xml` — currently only `adminBasePath` (default: `/admin`)
+- Plugin config in `config.xml` — includes `adminBasePath`, global toolbar feature switches, and customer-context data exposure settings
 - Services registered in `src/Resources/config/services.xml`
 - Routes imported via attribute-based routing from `src/Controller/`
 - Every new privileged feature must integrate with Shopware ACL/privileges end-to-end: admin privilege registration, backend enforcement, and UI gating
