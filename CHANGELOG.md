@@ -1,3 +1,6 @@
+# 1.5.1
+* Changed: Shortened the plugin configuration hint text to better distinguish global toolbar settings from personal user preferences
+
 # 1.5.0
 * Added: Personal per-user feature preferences for product links, category links, CMS/layout links, and customer context in the Admin Toolbar settings module
 * Added: Global plugin configuration switches for product edit links, category links, and CMS/layout links, with server-side capability enforcement
