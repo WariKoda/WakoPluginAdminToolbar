@@ -17,6 +17,13 @@ use WakoPluginAdminToolbar\Struct\ToolbarSession;
 
 final class ToolbarSessionResolver
 {
+    private const FEATURE_FIELDS = [
+        'productLinks' => 'wako_admin_toolbar_feature_product_links',
+        'categoryLinks' => 'wako_admin_toolbar_feature_category_links',
+        'cmsLinks' => 'wako_admin_toolbar_feature_cms_links',
+        'customerContext' => 'wako_admin_toolbar_feature_customer_context',
+    ];
+
     public function __construct(
         private readonly EntityRepository $userRepository,
         private readonly Configuration $jwtConfiguration,
@@ -78,6 +85,7 @@ final class ToolbarSessionResolver
             $user->isAdmin(),
             $this->collectPrivileges($user),
             $user,
+            $this->collectFeaturePreferences($customFields),
         );
     }
 
@@ -110,6 +118,22 @@ final class ToolbarSessionResolver
         }
 
         return $sub;
+    }
+
+    /**
+     * @param array<string, mixed> $customFields
+     *
+     * @return array<string, bool>
+     */
+    private function collectFeaturePreferences(array $customFields): array
+    {
+        $preferences = [];
+
+        foreach (self::FEATURE_FIELDS as $feature => $fieldName) {
+            $preferences[$feature] = (bool) ($customFields[$fieldName] ?? true);
+        }
+
+        return $preferences;
     }
 
     /**

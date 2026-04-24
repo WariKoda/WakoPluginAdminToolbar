@@ -8,6 +8,7 @@ final class ToolbarSession
 {
     /**
      * @param array<string, bool> $privileges
+     * @param array<string, bool> $featurePreferences
      */
     public function __construct(
         private readonly string $userId,
@@ -15,6 +16,7 @@ final class ToolbarSession
         private readonly bool $isAdmin,
         private readonly array $privileges,
         private readonly UserEntity $user,
+        private readonly array $featurePreferences = [],
     ) {}
 
     public function getUserId(): string
@@ -43,6 +45,19 @@ final class ToolbarSession
     public function getUser(): UserEntity
     {
         return $this->user;
+    }
+
+    /**
+     * @return array<string, bool>
+     */
+    public function getFeaturePreferences(): array
+    {
+        return $this->featurePreferences;
+    }
+
+    public function isFeatureEnabled(string $feature): bool
+    {
+        return $this->featurePreferences[$feature] ?? true;
     }
 
     public function hasPrivilege(string $privilege): bool

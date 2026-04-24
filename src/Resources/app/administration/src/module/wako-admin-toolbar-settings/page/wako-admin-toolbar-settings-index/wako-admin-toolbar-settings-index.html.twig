@@ -34,37 +34,15 @@
 
                 <sw-container columns="1fr 1fr" gap="16px">
                     <mt-switch
-                        :model-value="false"
-                        :label="$tc('wako-admin-toolbar.settings.featureProductLinks')"
-                        :help-text="$tc('wako-admin-toolbar.settings.featureProductLinksHelp')"
-                        disabled
-                    />
-
-                    <mt-switch
-                        :model-value="false"
-                        :label="$tc('wako-admin-toolbar.settings.featureCategoryLinks')"
-                        :help-text="$tc('wako-admin-toolbar.settings.featureCategoryLinksHelp')"
-                        disabled
-                    />
-
-                    <mt-switch
-                        :model-value="false"
-                        :label="$tc('wako-admin-toolbar.settings.featureCmsLinks')"
-                        :help-text="$tc('wako-admin-toolbar.settings.featureCmsLinksHelp')"
-                        disabled
-                    />
-
-                    <mt-switch
-                        :model-value="false"
-                        :label="$tc('wako-admin-toolbar.settings.featureCustomerContext')"
-                        :help-text="$tc('wako-admin-toolbar.settings.featureCustomerContextHelp')"
-                        disabled
+                        v-for="feature in featureSwitches"
+                        :key="feature.name"
+                        :model-value="featurePreferences[feature.name]"
+                        :label="feature.label"
+                        :help-text="feature.helpText"
+                        :disabled="!canEditFeature(feature.name) || isSaving || isLoading || undefined"
+                        @update:model-value="onFeatureToggleChange(feature.name, $event)"
                     />
                 </sw-container>
-
-                <mt-banner variant="info">
-                    {{ $tc('wako-admin-toolbar.settings.featuresComingSoon') }}
-                </mt-banner>
             </mt-card>
         </sw-card-view>
     </template>

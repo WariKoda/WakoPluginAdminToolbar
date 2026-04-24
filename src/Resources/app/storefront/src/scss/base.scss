@@ -162,17 +162,12 @@ $white-30: rgba(255, 255, 255, 0.30);
     }
 
     &__sep {
+        display: none;
         width: 1px;
         height: 14px;
         margin: 0 2px;
         background: $white-20;
         flex-shrink: 0;
-
-        &--hidden,
-        &--desktop,
-        &--from-md {
-            display: none;
-        }
     }
 
     &__route {
@@ -182,6 +177,7 @@ $white-30: rgba(255, 255, 255, 0.30);
         font-family: $mono;
         font-size: 11px;
         cursor: default;
+        padding: 0 7px;
 
         &:empty,
         &--desktop {
@@ -227,8 +223,7 @@ $white-30: rgba(255, 255, 255, 0.30);
             opacity: 0.3;
         }
 
-        &--desktop,
-        &--from-md {
+        &--desktop {
             display: none;
         }
     }
@@ -666,13 +661,10 @@ $white-30: rgba(255, 255, 255, 0.30);
             display: flex;
         }
 
-        &__btn--from-md {
-            display: inline-flex;
-        }
+    }
 
-        &__sep--from-md {
-            display: block;
-        }
+    &__sep--visible {
+        display: block;
     }
 
     @include media-breakpoint-up(lg) {
