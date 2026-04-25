@@ -121,6 +121,14 @@ The customer context dropdown only renders sections whose data fields are enable
 - `src/Resources/app/administration/src/snippet/en-GB.json`
 - `src/Resources/app/administration/src/snippet/de-DE.json`
 
+## Installation
+
+From the Shopware root:
+
+```bash
+composer req wako/plugin-admin-toolbar
+```
+
 ## Build
 
 From the Shopware root:
@@ -128,7 +136,4 @@ From the Shopware root:
 ```bash
 bin/console plugin:refresh
 bin/console plugin:install --activate WakoPluginAdminToolbar
-bin/console cache:clear
-./bin/build-storefront.sh
-./bin/build-administration.sh
 ```
