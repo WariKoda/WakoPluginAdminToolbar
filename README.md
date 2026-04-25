@@ -2,6 +2,23 @@
 
 Shopware 6 storefront plugin that shows a fixed administration toolbar at the top of the storefront for eligible administration users, including quick links into the Shopware Administration, context-aware edit buttons for products, categories, variants, CMS pages and shopping experiences, customer context insights, rule visibility, copy-to-clipboard helpers, and cache clearing.
 
+## Installation
+
+From the Shopware root:
+
+```bash
+composer req wako/plugin-admin-toolbar
+```
+
+## Build
+
+From the Shopware root:
+
+```bash
+bin/console plugin:refresh
+bin/console plugin:install --activate WakoPluginAdminToolbar
+```
+
 ## Screenshots
 
 ### Screenshot 1
@@ -121,19 +138,4 @@ The customer context dropdown only renders sections whose data fields are enable
 - `src/Resources/app/administration/src/snippet/en-GB.json`
 - `src/Resources/app/administration/src/snippet/de-DE.json`
 
-## Installation
 
-From the Shopware root:
-
-```bash
-composer req wako/plugin-admin-toolbar
-```
-
-## Build
-
-From the Shopware root:
-
-```bash
-bin/console plugin:refresh
-bin/console plugin:install --activate WakoPluginAdminToolbar
-```
