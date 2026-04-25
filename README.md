@@ -9,13 +9,10 @@ From the Shopware root:
 ```bash
 composer req wako/plugin-admin-toolbar
 ```
+Or download and deploy contents of zip into custom/plugins
 
-## Build
-
-From the Shopware root:
-
+Then
 ```bash
-bin/console plugin:refresh
 bin/console plugin:install --activate WakoPluginAdminToolbar
 ```
 
