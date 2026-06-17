@@ -1,3 +1,6 @@
+# 1.5.2
+* Fixed: added missing compiled JS files to the plugin package
+
 # 1.5.1
 * Changed: Shortened the plugin configuration hint text to better distinguish global toolbar settings from personal user preferences
 
