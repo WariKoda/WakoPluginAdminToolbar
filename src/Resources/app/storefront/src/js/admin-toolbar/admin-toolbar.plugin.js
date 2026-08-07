@@ -17,8 +17,11 @@ export default class AdminToolbarPlugin extends Plugin {
         let verified = false;
 
         try {
+            const authUrl = this.el.dataset.toolbarAuthUrl;
+            if (!authUrl) return;
+
             // Single request replaces toolbar-session + _info/me + user/{id}
-            const response = await fetch('/admin/toolbar-auth', {
+            const response = await fetch(authUrl, {
                 credentials: 'include',
             });
 
@@ -160,7 +163,12 @@ export default class AdminToolbarPlugin extends Plugin {
         this._setButtonContent(btn, null, '…');
 
         try {
-            const response = await fetch('/admin/toolbar-clear-cache', {
+            const clearCacheUrl = this.el.dataset.toolbarClearCacheUrl;
+            if (!clearCacheUrl) {
+                throw new Error('Missing clear-cache URL.');
+            }
+
+            const response = await fetch(clearCacheUrl, {
                 method: 'DELETE',
                 credentials: 'include',
             });
@@ -262,11 +270,13 @@ export default class AdminToolbarPlugin extends Plugin {
     async _loadVariants(dropdown) {
         const parentId = dropdown.dataset.toolbarVariants;
         const adminBaseUrl = this._adminBaseUrl;
+        const variantsUrlTemplate = this.el.dataset.toolbarVariantsUrlTemplate;
         const menu = dropdown.querySelector('.wako-admin-toolbar__dropdown-menu');
-        if (!menu || !parentId || !adminBaseUrl) return;
+        if (!menu || !parentId || !adminBaseUrl || !variantsUrlTemplate) return;
 
         try {
-            const response = await fetch(`/admin/toolbar-variants/${encodeURIComponent(parentId)}`, {
+            const variantsUrl = variantsUrlTemplate.replace('__PARENT_ID__', encodeURIComponent(parentId));
+            const response = await fetch(variantsUrl, {
                 credentials: 'include',
             });
 
@@ -317,7 +327,10 @@ export default class AdminToolbarPlugin extends Plugin {
         this._customerContextLoading = true;
 
         try {
-            const response = await fetch('/admin/toolbar-customer-context', {
+            const customerContextUrl = this.el.dataset.toolbarCustomerContextUrl;
+            if (!customerContextUrl) return;
+
+            const response = await fetch(customerContextUrl, {
                 credentials: 'include',
             });
 

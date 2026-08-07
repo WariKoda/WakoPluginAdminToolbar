@@ -2,6 +2,13 @@
 
 Shopware 6 storefront plugin that shows a fixed administration toolbar at the top of the storefront for eligible administration users, including quick links into the Shopware Administration, context-aware edit buttons for products, categories, variants, CMS pages and shopping experiences, customer context insights, rule visibility, copy-to-clipboard helpers, and cache clearing.
 
+## Requirements
+
+- Shopware 6.7
+- Shopware Storefront and Administration
+
+Version 2.0.0 and newer no longer support Shopware 6.6.
+
 ## Installation
 
 From the Shopware root:

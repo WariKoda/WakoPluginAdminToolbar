@@ -32,7 +32,7 @@ class AdminToolbarAuthController
     ) {}
 
     #[Route(
-        path: '/admin/toolbar-auth',
+        path: '/%shopware_administration.path_name%/toolbar-auth',
         name: 'wako.admin.toolbar.auth',
         defaults: ['auth_required' => false],
         methods: ['GET'],
@@ -55,7 +55,7 @@ class AdminToolbarAuthController
     }
 
     #[Route(
-        path: '/admin/toolbar-clear-cache',
+        path: '/%shopware_administration.path_name%/toolbar-clear-cache',
         name: 'wako.admin.toolbar.clear_cache',
         defaults: ['auth_required' => false],
         methods: ['DELETE'],
@@ -77,7 +77,7 @@ class AdminToolbarAuthController
     }
 
     #[Route(
-        path: '/admin/toolbar-variants/{parentId}',
+        path: '/%shopware_administration.path_name%/toolbar-variants/{parentId}',
         name: 'wako.admin.toolbar.variants',
         defaults: ['auth_required' => false],
         methods: ['GET'],
@@ -99,7 +99,7 @@ class AdminToolbarAuthController
     }
 
     #[Route(
-        path: '/admin/toolbar-customer-context',
+        path: '/%shopware_administration.path_name%/toolbar-customer-context',
         name: 'wako.admin.toolbar.customer_context',
         defaults: ['auth_required' => false],
         methods: ['GET'],
@@ -107,7 +107,14 @@ class AdminToolbarAuthController
     public function customerContext(Request $request): Response
     {
         $toolbarSession = $this->toolbarSessionResolver->resolveAuthorized($request);
-        if ($toolbarSession === null || !$this->permissionService->canViewCustomerContext($toolbarSession)) {
+        $salesChannelId = $request->hasSession()
+            ? (string) $request->getSession()->get(PlatformRequest::ATTRIBUTE_SALES_CHANNEL_ID, '')
+            : '';
+
+        if ($toolbarSession === null
+            || !$this->permissionService->canViewCustomerContext($toolbarSession)
+            || !$this->capabilitiesBuilder->hasAnyCustomerContextData($salesChannelId ?: null)
+        ) {
             return $this->response(Response::HTTP_FORBIDDEN);
         }
 

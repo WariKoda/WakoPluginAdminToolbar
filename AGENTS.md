@@ -5,7 +5,7 @@
 A Shopware 6 storefront plugin that displays a fixed admin toolbar at the top of the storefront for logged-in administration users. It provides quick-access links to edit the current page's entity (product, category, landing page, CMS layout) in the admin, shows the current route name, allows copying entity IDs, and clearing caches — all without leaving the storefront.
 
 **Namespace:** `WakoPluginAdminToolbar`
-**Compatibility:** Shopware 6.6 / 6.7
+**Compatibility:** Shopware 6.7
 **License:** MIT
 **Vendor:** WariKoda
 **Lead Developer:** Niklas Braun
@@ -16,17 +16,17 @@ A Shopware 6 storefront plugin that displays a fixed admin toolbar at the top of
 
 The toolbar now uses a **minimal auth endpoint plus dedicated server-side action endpoints** with mandatory **Shopware ACL / role privilege checks**. The flow:
 
-1. Storefront JS fetches `GET /admin/toolbar-auth`
+1. Storefront JS fetches `GET /{administrationPath}/toolbar-auth` using a server-generated route URL
 2. The controller reads the `bearerAuth` cookie server-side under `/admin`
-3. The JWT is **cryptographically verified** using Shopware's JWT configuration
+3. The access token is validated through Shopware's complete bearer-token validator, including signature, expiry, revocation, active-user, and password-change checks
 4. The user is loaded from the database together with assigned `aclRoles`
 5. The opt-in custom field `wako_admin_toolbar_enabled` is checked
 6. The plugin-specific base privilege `wako_admin_toolbar:use` is required to expose the toolbar at all
 7. The endpoint returns only minimal state plus capability flags derived from Shopware ACL
-8. Toolbar actions use dedicated server-side endpoints instead of exposing reusable admin credentials to storefront JS:
-   - `DELETE /admin/toolbar-clear-cache`
-   - `GET /admin/toolbar-variants/{parentId}`
-   - `GET /admin/toolbar-customer-context`
+8. Toolbar actions use dedicated server-side endpoints below Shopware's configured Administration path instead of exposing reusable admin credentials to storefront JS:
+   - `DELETE /{administrationPath}/toolbar-clear-cache`
+   - `GET /{administrationPath}/toolbar-variants/{parentId}`
+   - `GET /{administrationPath}/toolbar-customer-context`
 9. Every endpoint performs its **own server-side privilege checks**
 
 **Important:** The admin bearer token must never be returned to storefront JavaScript. Customer context is lazy-loaded on first interaction and the sales channel is derived server-side from the session. UI visibility is never a substitute for backend authorization.
@@ -58,13 +58,13 @@ The subscriber listens to:
 
 - **Home link:** Opens admin dashboard
 - **Context links:** Edit Product / Edit Layout / Edit Category / Edit Landing Page / Edit Shopping Experience (context-aware)
-- **Variant dropdown:** On variant product pages, lazy-loads sibling variants on hover via `/admin/toolbar-variants/{parentId}`
+- **Variant dropdown:** On variant product pages, lazy-loads sibling variants via the server-generated toolbar variants endpoint
 - **Customer context:** Lazy-loads customer info and active rules on first dropdown interaction
 - **Per-user feature preferences:** Users can show/hide product links, category links, CMS/layout links, and customer context in the dedicated settings module
 - **Global feature switches:** Plugin config can disable product links, category links, and CMS/layout links for all users
 - **Route name display:** Shows current Symfony route (stripped of `frontend.` prefix)
 - **Copy entity ID:** Copies current entity UUID to clipboard
-- **Clear cache:** Calls `DELETE /admin/toolbar-clear-cache` server-side
+- **Clear cache:** Calls the server-generated toolbar clear-cache endpoint
 - **Collapse/expand:** Persists state in `localStorage` (`wako.admin-toolbar.collapsed`)
 
 ### ACL & Permission Handling (Mandatory)
@@ -144,7 +144,7 @@ bin/console cache:clear
 
 - Don't add HttpOnly to `bearerAuth` cookie handling — the cookie is set by Shopware's admin JS and must remain readable by the admin app
 - Don't expose the admin bearer token to storefront JavaScript
-- Don't remove JWT verification from the auth controller
+- Don't bypass Shopware's complete bearer-token validation in the toolbar session resolver
 - Don't trust client-supplied `salesChannelId` for customer context reconstruction
 - Don't eagerly fetch customer context during toolbar initialisation
 - Don't use global CSS selectors — everything must be scoped under `.wako-admin-toolbar`

@@ -9,6 +9,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Routing\ApiRouteScope;
 use Shopware\Core\PlatformRequest;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
+use Shopware\Core\System\User\UserCollection;
 use Shopware\Core\System\User\UserEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +28,9 @@ class AdminToolbarProfileController
         'customerContext' => 'wako_admin_toolbar_feature_customer_context',
     ];
 
+    /**
+     * @param EntityRepository<UserCollection> $userRepository
+     */
     public function __construct(
         private readonly EntityRepository $userRepository,
         private readonly SystemConfigService $systemConfigService,
@@ -48,7 +52,6 @@ class AdminToolbarProfileController
         $userId = $source->getUserId();
         $enabled = $request->request->getBoolean('enabled');
         $features = $request->request->all('features');
-        $features = \is_array($features) ? $features : [];
 
         $user = $context->scope(Context::SYSTEM_SCOPE, fn (Context $context): ?UserEntity => $this->userRepository
             ->search(new Criteria([$userId]), $context)
@@ -63,11 +66,11 @@ class AdminToolbarProfileController
         $customFields[self::FIELD_NAME] = $enabled;
 
         foreach (self::FEATURE_FIELDS as $feature => $fieldName) {
-            if (!\array_key_exists($feature, $features)) {
+            if (!\array_key_exists($feature, $features) || !$this->isFeatureAllowed($feature, $context)) {
                 continue;
             }
 
-            $customFields[$fieldName] = $this->isFeatureAllowed($feature, $context) && (bool) $features[$feature];
+            $customFields[$fieldName] = (bool) $features[$feature];
         }
 
         $context->scope(Context::SYSTEM_SCOPE, function (Context $context) use ($userId, $customFields): void {

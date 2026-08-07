@@ -51,7 +51,7 @@ final class ToolbarCapabilitiesBuilder
         return $value === null || $value === true;
     }
 
-    private function hasAnyCustomerContextData(?string $salesChannelId): bool
+    public function hasAnyCustomerContextData(?string $salesChannelId = null): bool
     {
         $keys = [
             'WakoPluginAdminToolbar.config.customerContextShowEmail',

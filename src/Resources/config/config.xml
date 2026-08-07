@@ -79,7 +79,7 @@
             <helpText>If enabled, the customer email address is transmitted to the storefront toolbar. Disabled by default to minimise exposure of personal data.</helpText>
             <helpText lang="en-GB">If enabled, the customer email address is transmitted to the storefront toolbar. Disabled by default to minimise exposure of personal data.</helpText>
             <helpText lang="de-DE">Wenn aktiviert, wird die E-Mail-Adresse des Kunden an die Storefront-Toolbar übermittelt. Standardmäßig deaktiviert, um die Exposition personenbezogener Daten zu minimieren.</helpText>
-            <defaultValue>true</defaultValue>
+            <defaultValue>false</defaultValue>
         </input-field>
 
         <input-field type="bool">
@@ -101,7 +101,7 @@
             <helpText>If enabled, the names and priorities of active pricing, shipping and discount rules are transmitted to the storefront toolbar. Disabled by default to avoid exposing internal business logic.</helpText>
             <helpText lang="en-GB">If enabled, the names and priorities of active pricing, shipping and discount rules are transmitted to the storefront toolbar. Disabled by default to avoid exposing internal business logic.</helpText>
             <helpText lang="de-DE">Wenn aktiviert, werden Namen und Prioritäten aktiver Preis-, Versand- und Rabattregeln an die Storefront-Toolbar übermittelt. Standardmäßig deaktiviert, um interne Geschäftslogik nicht zu exponieren.</helpText>
-            <defaultValue>true</defaultValue>
+            <defaultValue>false</defaultValue>
         </input-field>
 
     </card>

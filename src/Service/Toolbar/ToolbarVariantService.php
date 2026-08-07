@@ -2,8 +2,7 @@
 
 namespace WakoPluginAdminToolbar\Service\Toolbar;
 
-use Shopware\Core\Content\Product\ProductEntity;
-use Shopware\Core\Content\Property\Aggregate\PropertyGroupOption\PropertyGroupOptionEntity;
+use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -12,6 +11,9 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 
 final class ToolbarVariantService
 {
+    /**
+     * @param EntityRepository<ProductCollection> $productRepository
+     */
     public function __construct(
         private readonly EntityRepository $productRepository,
     ) {}
@@ -32,16 +34,8 @@ final class ToolbarVariantService
         $products = $this->productRepository->search($criteria, $context)->getEntities();
 
         foreach ($products as $product) {
-            if (!$product instanceof ProductEntity) {
-                continue;
-            }
-
             $options = [];
             foreach ($product->getOptions() ?? [] as $option) {
-                if (!$option instanceof PropertyGroupOptionEntity) {
-                    continue;
-                }
-
                 $group = $option->getGroup();
                 $options[] = [
                     'groupName' => (string) ($group?->getTranslation('name') ?? $group?->getName() ?? ''),
