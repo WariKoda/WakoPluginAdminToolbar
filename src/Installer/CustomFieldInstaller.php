@@ -6,6 +6,8 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\System\CustomField\Aggregate\CustomFieldSet\CustomFieldSetCollection;
+use Shopware\Core\System\CustomField\Aggregate\CustomFieldSet\CustomFieldSetEntity;
 use Shopware\Core\System\CustomField\CustomFieldTypes;
 
 class CustomFieldInstaller
@@ -32,49 +34,44 @@ class CustomFieldInstaller
         ],
     ];
 
+    /**
+     * @param EntityRepository<CustomFieldSetCollection> $customFieldSetRepository
+     */
     public function __construct(
         private readonly EntityRepository $customFieldSetRepository,
     ) {}
 
     public function install(Context $context): void
     {
-        // Idempotent — skip if the set already exists
-        $criteria = new Criteria();
-        $criteria->addFilter(new EqualsFilter('name', self::SET_NAME));
+        $criteria = (new Criteria())
+            ->addFilter(new EqualsFilter('name', self::SET_NAME))
+            ->addAssociation('customFields');
 
-        if ($this->customFieldSetRepository->searchIds($criteria, $context)->getTotal() > 0) {
+        $customFieldSet = $this->customFieldSetRepository
+            ->search($criteria, $context)
+            ->getEntities()
+            ->first();
+
+        if ($customFieldSet instanceof CustomFieldSetEntity) {
+            $existingFieldNames = [];
+
+            foreach ($customFieldSet->getCustomFields() ?? [] as $customField) {
+                $existingFieldNames[] = $customField->getName();
+            }
+
+            $missingCustomFields = $this->buildCustomFields($existingFieldNames);
+            if ($missingCustomFields === []) {
+                return;
+            }
+
+            $this->customFieldSetRepository->update([
+                [
+                    'id' => $customFieldSet->getId(),
+                    'customFields' => $missingCustomFields,
+                ],
+            ], $context);
+
             return;
-        }
-
-        $customFields = [
-            [
-                'name'   => self::FIELD_NAME,
-                'type'   => CustomFieldTypes::BOOL,
-                'config' => [
-                    'label' => [
-                        'en-GB' => 'Admin toolbar enabled',
-                        'de-DE' => 'Admin-Toolbar aktiviert',
-                    ],
-                    'componentName'   => 'sw-field',
-                    'customFieldType' => 'checkbox',
-                    'customFieldPosition' => 1,
-                ],
-            ],
-        ];
-
-        $position = 2;
-        foreach (self::FEATURE_FIELDS as $name => $label) {
-            $customFields[] = [
-                'name'   => $name,
-                'type'   => CustomFieldTypes::BOOL,
-                'config' => [
-                    'label' => $label,
-                    'componentName' => 'sw-field',
-                    'customFieldType' => 'checkbox',
-                    'customFieldPosition' => $position,
-                ],
-            ];
-            ++$position;
         }
 
         $this->customFieldSetRepository->create([
@@ -90,9 +87,55 @@ class CustomFieldInstaller
                 'relations' => [
                     ['entityName' => 'user'],
                 ],
-                'customFields' => $customFields,
+                'customFields' => $this->buildCustomFields(),
             ],
         ], $context);
+    }
+
+    /**
+     * @param array<string> $existingFieldNames
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function buildCustomFields(array $existingFieldNames = []): array
+    {
+        $customFields = [];
+
+        if (!\in_array(self::FIELD_NAME, $existingFieldNames, true)) {
+            $customFields[] = [
+                'name'   => self::FIELD_NAME,
+                'type'   => CustomFieldTypes::BOOL,
+                'config' => [
+                    'label' => [
+                        'en-GB' => 'Admin toolbar enabled',
+                        'de-DE' => 'Admin-Toolbar aktiviert',
+                    ],
+                    'componentName'   => 'sw-field',
+                    'customFieldType' => 'checkbox',
+                    'customFieldPosition' => 1,
+                ],
+            ];
+        }
+
+        $position = 2;
+        foreach (self::FEATURE_FIELDS as $name => $label) {
+            if (!\in_array($name, $existingFieldNames, true)) {
+                $customFields[] = [
+                    'name'   => $name,
+                    'type'   => CustomFieldTypes::BOOL,
+                    'config' => [
+                        'label' => $label,
+                        'componentName' => 'sw-field',
+                        'customFieldType' => 'checkbox',
+                        'customFieldPosition' => $position,
+                    ],
+                ];
+            }
+
+            ++$position;
+        }
+
+        return $customFields;
     }
 
     public function uninstall(Context $context): void

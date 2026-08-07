@@ -1,3 +1,16 @@
+# 2.0.0
+* Breaking: Shopware 6.6 support was removed; Shopware 6.7 with Storefront and Administration is now required
+* Security: Toolbar bearer tokens now use Shopware's complete token validation, including expiry, revocation, active-user, and password-change checks
+* Fixed: Plugin updates now add missing per-user feature custom fields to existing installations
+* Fixed: Customer email and active-rule exposure are disabled by default as documented; upgrading to 2.0.0 resets both global settings and requires an explicit opt-in
+* Security: The customer-context endpoint now enforces the global data-exposure configuration server-side
+* Changed: Toolbar endpoints now follow Shopware's configured Administration path and are generated server-side
+* Changed: Anonymous storefront requests no longer consume the toolbar authentication rate limit
+* Fixed: Temporarily unavailable features no longer overwrite a user's saved feature preferences
+* Fixed: Landing-page context links now open the landing-page editor instead of the assigned CMS layout
+* Added: PHPUnit coverage for toolbar permissions, capability gates, and bearer-token rejection
+* Changed: PHP source now passes PHPStan level 8 without errors
+
 # 1.5.2
 * Fixed: added missing compiled JS files to the plugin package
 

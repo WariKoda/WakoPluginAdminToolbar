@@ -2,7 +2,7 @@
 
 namespace WakoPluginAdminToolbar\Service\Toolbar;
 
-use Shopware\Core\Content\Rule\RuleEntity;
+use Shopware\Core\Content\Rule\RuleCollection;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -10,6 +10,9 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 
 final class ActiveRuleProvider
 {
+    /**
+     * @param EntityRepository<RuleCollection> $ruleRepository
+     */
     public function __construct(
         private readonly EntityRepository $ruleRepository,
     ) {}
@@ -34,10 +37,6 @@ final class ActiveRuleProvider
         $activeRules = [];
 
         foreach ($rules as $rule) {
-            if (!$rule instanceof RuleEntity) {
-                continue;
-            }
-
             $activeRules[] = [
                 'id' => (string) $rule->getId(),
                 'name' => (string) $rule->getName(),

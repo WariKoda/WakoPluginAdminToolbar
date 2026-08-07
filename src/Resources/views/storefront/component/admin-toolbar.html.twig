@@ -37,7 +37,7 @@
     {% set hasContextLink =
         (pageType == 'product' and entityId) or
         (pageType == 'navigation' and (cmsPageId or entityId)) or
-        (pageType == 'landingPage' and cmsPageId) or
+        (pageType == 'landingPage' and entityId) or
         (pageType == 'cmsPage' and cmsPageId) %}
 
     {# Inline SVG icons — defined as set variables (macros don't work with sw_extends) #}
@@ -100,6 +100,10 @@
          class="wako-admin-toolbar wako-admin-toolbar--hidden"
          data-admin-toolbar="true"
          data-admin-base-url="{{ adminBaseUrl }}"
+         data-toolbar-auth-url="{{ path('wako.admin.toolbar.auth') }}"
+         data-toolbar-clear-cache-url="{{ path('wako.admin.toolbar.clear_cache') }}"
+         data-toolbar-variants-url-template="{{ path('wako.admin.toolbar.variants', { parentId: '__PARENT_ID__' }) }}"
+         data-toolbar-customer-context-url="{{ path('wako.admin.toolbar.customer_context') }}"
          data-rules-show-all-label="{{ 'adminToolbar.showAllRules'|trans|striptags }}">
 
         {# Full toolbar — shown when expanded #}
@@ -177,8 +181,8 @@
                                class="wako-admin-toolbar__link"
                                data-toolbar-feature="edit-cms-page">{{ iconContent }} {{ 'adminToolbar.editShoppingExperience'|trans|striptags }}</a>
                         {% endif %}
-                    {% elseif pageType == 'landingPage' and cmsPageId %}
-                        <a href="{{ adminBaseUrl }}#/sw/cms/detail/{{ cmsPageId }}" target="_blank"
+                    {% elseif pageType == 'landingPage' and entityId %}
+                        <a href="{{ adminBaseUrl }}#/sw/category/landingPage/{{ entityId }}" target="_blank"
                            rel="noopener noreferrer"
                            class="wako-admin-toolbar__link"
                            data-toolbar-feature="edit-landing-page">{{ iconContent }} {{ 'adminToolbar.editLandingPage'|trans|striptags }}</a>

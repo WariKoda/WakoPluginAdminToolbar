@@ -2,14 +2,14 @@
 
 namespace WakoPluginAdminToolbar\Service\Toolbar;
 
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Exception;
-use Lcobucci\JWT\UnencryptedToken;
-use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use Shopware\Core\Framework\Api\OAuth\SymfonyBearerTokenValidator;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Uuid\Uuid;
+use Shopware\Core\PlatformRequest;
+use Shopware\Core\System\User\UserCollection;
 use Shopware\Core\System\User\UserEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
@@ -24,39 +24,37 @@ final class ToolbarSessionResolver
         'customerContext' => 'wako_admin_toolbar_feature_customer_context',
     ];
 
+    /**
+     * @param EntityRepository<UserCollection> $userRepository
+     */
     public function __construct(
         private readonly EntityRepository $userRepository,
-        private readonly Configuration $jwtConfiguration,
+        private readonly SymfonyBearerTokenValidator $bearerTokenValidator,
         private readonly RateLimiterFactory $rateLimiterFactory,
         private readonly ToolbarPermissionService $permissionService,
     ) {}
 
     public function resolve(Request $request): ?ToolbarSession
     {
-        $limiter = $this->rateLimiterFactory->create((string) $request->getClientIp());
-        if (!$limiter->consume()->isAccepted()) {
-            return null;
-        }
-
         $raw = $request->cookies->get('bearerAuth');
         if (!is_string($raw) || $raw === '') {
             return null;
         }
 
         try {
-            /** @var array{access?: string, expiry?: int|float} $auth */
+            /** @var array{access?: string} $auth */
             $auth = json_decode($raw, true, 512, \JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
             return null;
         }
 
-        $expiry = (int) ($auth['expiry'] ?? 0);
-        if ($expiry > 0 && (int) round(microtime(true) * 1000) > $expiry) {
+        $jwt = $auth['access'] ?? null;
+        if (!is_string($jwt) || $jwt === '') {
             return null;
         }
 
-        $jwt = $auth['access'] ?? null;
-        if (!is_string($jwt) || $jwt === '') {
+        $limiter = $this->rateLimiterFactory->create((string) $request->getClientIp());
+        if (!$limiter->consume()->isAccepted()) {
             return null;
         }
 
@@ -101,23 +99,22 @@ final class ToolbarSessionResolver
 
     private function validateAndExtractUserId(string $jwt): ?string
     {
+        $validationRequest = new Request();
+        $validationRequest->headers->set('Authorization', 'Bearer ' . $jwt);
+
         try {
-            /** @var UnencryptedToken $token */
-            $token = $this->jwtConfiguration->parser()->parse($jwt);
-
-            $constraints = $this->jwtConfiguration->validationConstraints();
-            $this->jwtConfiguration->validator()->assert($token, ...$constraints);
-        } catch (Exception | RequiredConstraintsViolated) {
+            $this->bearerTokenValidator->validateAuthorization($validationRequest);
+        } catch (OAuthServerException) {
             return null;
         }
 
-        $sub = $token->claims()->get('sub');
+        $userId = $validationRequest->attributes->get(PlatformRequest::ATTRIBUTE_OAUTH_USER_ID);
 
-        if (!is_string($sub) || !Uuid::isValid($sub)) {
+        if (!is_string($userId) || !Uuid::isValid($userId)) {
             return null;
         }
 
-        return $sub;
+        return $userId;
     }
 
     /**

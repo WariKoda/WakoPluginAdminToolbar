@@ -1,4 +1,5 @@
 meteor-kit-icons
+.phpunit.cache/
 .claude
 AUDIT.md
 docs/architecture
