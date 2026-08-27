@@ -1,6 +1,6 @@
 # WakoPluginAdminToolbar
 
-Shopware 6 storefront plugin that shows a fixed administration toolbar at the top of the storefront for eligible administration users, including quick links into the Shopware Administration, context-aware edit buttons for products, categories, variants, CMS pages and shopping experiences, customer context insights, rule visibility, copy-to-clipboard helpers, and cache clearing.
+A Shopware 6 plugin that adds an administration toolbar to the storefront. Eligible administration users can open the current product, category, CMS page, or shopping experience in the Administration without first searching for it.
 
 ## Requirements
 
@@ -11,14 +11,14 @@ Version 2.0.0 and newer no longer support Shopware 6.6.
 
 ## Installation
 
-From the Shopware root:
+Run this command from the Shopware root:
 
 ```bash
 composer req wako/plugin-admin-toolbar
 ```
-Or download and deploy contents of zip into custom/plugins
 
-Then
+Alternatively, extract the release archive into `custom/plugins`. Then install and activate the plugin:
+
 ```bash
 bin/console plugin:install --activate WakoPluginAdminToolbar
 ```
@@ -29,17 +29,18 @@ bin/console plugin:install --activate WakoPluginAdminToolbar
 
 ![WakoPluginAdminToolbar Screenshot 1](./docs/images/wakoAdminToolbar_001.png)
 
-### Screenshot 2 — Context button for products, variants, and shopping experiences
+### Context buttons for products, variants, and shopping experiences
 
 ![WakoPluginAdminToolbar Screenshot 2](./docs/images/wakoAdminToolbar_002.png)
 
-### Screenshot 3 — Customer context
+### Customer context
 
 ![WakoPluginAdminToolbar Screenshot 3](./docs/images/wakoAdminToolbar_003.png)
 
 ## What it does
 
-The toolbar can provide:
+The toolbar provides:
+
 - quick links into Shopware Administration
 - context-aware edit links for product/category/CMS/landing page related storefront pages
 - variant lookup for variant products
@@ -50,35 +51,35 @@ The toolbar can provide:
 - global feature switches for product links, category links, and CMS/layout links
 - per-user feature preferences for product links, category links, CMS/layout links, and customer context
 
-## Security & Permission Model
+## Security and permissions
 
-This plugin must adhere to the Shopware Administration **roles, permissions, and privileges** system.
+The plugin uses Shopware Administration roles and privileges. Hiding a control in the storefront does not authorize the underlying action.
 
-### Mandatory principles
+### Required rules
 
-- All privileged actions are enforced **server-side**
-- UI visibility is only convenience, not authorization
-- The user custom field `wako_admin_toolbar_enabled` is only an opt-in toggle
-- Per-user feature preferences and global plugin switches are additional gates, not authorization by themselves
+- The server enforces every privileged action
+- UI visibility is a convenience, not authorization
+- The user custom field `wako_admin_toolbar_enabled` only opts the user in
+- Per-user preferences and global plugin switches restrict features but do not authorize them
 - Toolbar access also requires Shopware ACL privileges
 - New privileged features must integrate with ACL end-to-end
 
 ### Base access requirement
 
-The toolbar is only available when all of the following are true:
+The toolbar is available only when all of these conditions are met:
+
 - a valid Shopware admin session exists
 - the user enabled the toolbar via `wako_admin_toolbar_enabled`
 - the user has the plugin privilege `wako_admin_toolbar:use`
 
-The plugin registers the role permission:
-- `wako_admin_toolbar.viewer` → `wako_admin_toolbar:use`
+The plugin registers the role permission `wako_admin_toolbar.viewer`, which grants `wako_admin_toolbar:use`.
 
-## Feature to privilege mapping
+## Feature-to-privilege mapping
 
 | Feature | Required privilege(s) | Additional gates |
 |---|---|---|
 | Use toolbar at all | `wako_admin_toolbar:use` | Per-user toolbar opt-in |
-| Clear cache | `system:clear:cache` | — |
+| Clear cache | `system:clear:cache` | None |
 | Load variants | `product:read` | Product links enabled globally and for the user |
 | Edit product | `product:update` | Product links enabled globally and for the user |
 | Edit category | `category:update` | Category links enabled globally and for the user |
@@ -87,43 +88,40 @@ The plugin registers the role permission:
 | View customer context | `customer:read` | Customer context enabled for the user and at least one customer context data field enabled globally |
 | View active rules / rule links | `rule:read` | Customer context enabled for the user and active rules enabled globally |
 
-## Development rule for future changes
+## Adding privileged features
 
-Whenever you add a new action, endpoint, or toolbar button:
+For every new action, endpoint, or toolbar button:
 
-1. define the needed Shopware/core or plugin privilege
-2. enforce it in backend PHP code
-3. expose only minimal capability flags if the storefront/admin UI needs them
-4. hide or disable the related UI accordingly
-5. register admin privilege labels/snippets for plugin-specific permissions
+1. Define the required Shopware core or plugin privilege.
+2. Enforce it in the PHP backend.
+3. Expose only the capability flags required by the storefront or Administration UI.
+4. Hide or disable the corresponding UI.
+5. Register Administration labels and snippets for plugin-specific privileges.
 
-## Current user administration module
+## User settings
 
-The plugin provides a dedicated administration settings module for the currently logged-in user.
+The current user can configure the toolbar under **Administration > Settings > Plugins > Admin Toolbar**.
 
-Location:
-- **Administration → Settings → Plugins → Admin Toolbar**
+The module allows users to:
 
-Current scope:
-- enable or disable the storefront admin toolbar for the own account
+- enable or disable the storefront toolbar for their account
 - configure personal visibility preferences for product links, category links, CMS/layout links, and customer context
 - show disabled feature toggles when the user lacks the required ACL permission or a feature is disabled globally
 
-The module itself is available with:
-- `user.update_profile`
+Opening the module requires `user.update_profile`.
 
-Changing toolbar activation and feature preferences requires:
+Changing toolbar activation or feature preferences requires:
+
 - `user_change_me`
 - `wako_admin_toolbar:use`
 - the corresponding feature ACL permission when enabling a feature
 
-Notes:
-- the toolbar activation setting is no longer edited in the Shopware profile page
-- personal feature preferences are stored on the current user and are enforced server-side when toolbar capabilities are built
+Toolbar activation is no longer part of the Shopware profile page. The plugin stores preferences on the current user and enforces them on the server when it builds the available toolbar capabilities.
 
 ## Plugin configuration
 
 The plugin configuration contains:
+
 - `adminBasePath` for the Administration base path
 - global toolbar feature switches for product links, category links, and CMS/layout links
 - customer context data controls for email, customer number, and active rules
@@ -141,5 +139,3 @@ The customer context dropdown only renders sections whose data fields are enable
 - `src/Resources/app/administration/src/module/wako-admin-toolbar-settings/`
 - `src/Resources/app/administration/src/snippet/en-GB.json`
 - `src/Resources/app/administration/src/snippet/de-DE.json`
-
-
