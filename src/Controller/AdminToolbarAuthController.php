@@ -12,9 +12,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Twig\Environment;
 use WakoPluginAdminToolbar\Service\Toolbar\ToolbarCapabilitiesBuilder;
 use WakoPluginAdminToolbar\Service\Toolbar\ToolbarCustomerContextProvider;
 use WakoPluginAdminToolbar\Service\Toolbar\ToolbarPermissionService;
+use WakoPluginAdminToolbar\Service\Toolbar\ToolbarRenderContextFactory;
 use WakoPluginAdminToolbar\Service\Toolbar\ToolbarSessionResolver;
 use WakoPluginAdminToolbar\Service\Toolbar\ToolbarVariantService;
 
@@ -29,6 +32,9 @@ class AdminToolbarAuthController
         private readonly ToolbarCustomerContextProvider $customerContextProvider,
         private readonly CacheClearer $cacheClearer,
         private readonly SystemConfigService $systemConfigService,
+        private readonly ToolbarRenderContextFactory $renderContextFactory,
+        private readonly Environment $twig,
+        private readonly LocaleAwareInterface $translator,
     ) {}
 
     #[Route(
@@ -48,9 +54,13 @@ class AdminToolbarAuthController
             ? (string) $request->getSession()->get(PlatformRequest::ATTRIBUTE_SALES_CHANNEL_ID, '')
             : '';
 
+        $salesChannelId = $salesChannelId ?: null;
+        $renderContext = $this->renderContextFactory->create($request);
+
         return $this->jsonResponse([
             'enabled' => true,
-            'permissions' => $this->capabilitiesBuilder->build($toolbarSession, $salesChannelId ?: null),
+            'permissions' => $this->capabilitiesBuilder->build($toolbarSession, $salesChannelId),
+            'html' => $this->renderToolbar($request, $renderContext, $salesChannelId),
         ]);
     }
 
@@ -129,6 +139,75 @@ class AdminToolbarAuthController
         }
 
         return $this->jsonResponse($customerContext);
+    }
+
+    /**
+     * @param array{
+     *     pageType: string,
+     *     entityId: string|null,
+     *     parentId: string|null,
+     *     cmsPageId: string|null,
+     *     routeName: string|null,
+     *     locale: string
+     * } $renderContext
+     */
+    private function renderToolbar(Request $request, array $renderContext, ?string $salesChannelId): string
+    {
+        $locale = $renderContext['locale'];
+        $previousLocale = $this->translator->getLocale();
+        $this->translator->setLocale($locale);
+
+        try {
+            return $this->twig->render(
+                '@WakoPluginAdminToolbar/storefront/component/admin-toolbar.html.twig',
+                [
+                    ...$renderContext,
+                    'adminBaseUrl' => $this->adminBaseUrl($request, $salesChannelId),
+                    'customerContextShowEmail' => $this->configBool(
+                        'customerContextShowEmail',
+                        false,
+                        $salesChannelId,
+                    ),
+                    'customerContextShowCustomerNumber' => $this->configBool(
+                        'customerContextShowCustomerNumber',
+                        true,
+                        $salesChannelId,
+                    ),
+                    'customerContextShowRules' => $this->configBool(
+                        'customerContextShowRules',
+                        false,
+                        $salesChannelId,
+                    ),
+                ],
+            );
+        } finally {
+            $this->translator->setLocale($previousLocale);
+        }
+    }
+
+    private function adminBaseUrl(Request $request, ?string $salesChannelId): string
+    {
+        $configuredPath = $this->systemConfigService->get(
+            'WakoPluginAdminToolbar.config.adminBasePath',
+            $salesChannelId,
+        );
+        $adminBasePath = \is_string($configuredPath) ? \rtrim($configuredPath, '/') : '';
+
+        if ($adminBasePath === '' || !str_starts_with($adminBasePath, '/') || str_starts_with($adminBasePath, '//')) {
+            $adminBasePath = '/admin';
+        }
+
+        return $request->getSchemeAndHttpHost() . $adminBasePath;
+    }
+
+    private function configBool(string $name, bool $default, ?string $salesChannelId): bool
+    {
+        $value = $this->systemConfigService->get(
+            \sprintf('WakoPluginAdminToolbar.config.%s', $name),
+            $salesChannelId,
+        );
+
+        return $value === null ? $default : (bool) $value;
     }
 
     private function isFeatureEnabled(string $feature, Request $request): bool

@@ -74,6 +74,8 @@ The toolbar is available only when all of these conditions are met:
 
 The plugin registers the role permission `wako_admin_toolbar.viewer`, which grants `wako_admin_toolbar:use`.
 
+The public storefront HTML contains only an empty toolbar bootstrap element. The auth endpoint returns and JavaScript mounts the full Twig-rendered toolbar only after these checks succeed. Disabled users and anonymous crawlers therefore receive no toolbar text, SVG sprite, or Administration links in the page source.
+
 ## Feature-to-privilege mapping
 
 | Feature | Required privilege(s) | Additional gates |
@@ -133,6 +135,7 @@ The customer context dropdown only renders sections whose data fields are enable
 - `src/WakoPluginAdminToolbar.php`
 - `src/Controller/AdminToolbarAuthController.php`
 - `src/Controller/AdminToolbarProfileController.php`
+- `src/Resources/views/storefront/component/admin-toolbar-bootstrap.html.twig`
 - `src/Resources/views/storefront/component/admin-toolbar.html.twig`
 - `src/Resources/app/storefront/src/js/admin-toolbar/admin-toolbar.plugin.js`
 - `src/Resources/app/administration/src/acl/index.js`

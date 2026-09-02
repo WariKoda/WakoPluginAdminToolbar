@@ -27,6 +27,7 @@
         </service>
 
         <service id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarPermissionService"/>
+        <service id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarRenderContextFactory"/>
 
         <service id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarCapabilitiesBuilder">
             <argument type="service" id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarPermissionService"/>
@@ -62,6 +63,9 @@
             <argument type="service" id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarCustomerContextProvider"/>
             <argument type="service" id="Shopware\Core\Framework\Adapter\Cache\CacheClearer"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="WakoPluginAdminToolbar\Service\Toolbar\ToolbarRenderContextFactory"/>
+            <argument type="service" id="twig"/>
+            <argument type="service" id="translator"/>
             <tag name="controller.service_arguments"/>
         </service>
 
