@@ -1,3 +1,7 @@
+# 2.1.0
+* Fixed: Anonymous visitors, crawlers, disabled users, and users without toolbar access no longer receive the hidden toolbar markup or Administration links in the initial storefront HTML
+* Changed: The authenticated toolbar fragment is now rendered by the auth endpoint and mounted client-side after successful authorization
+
 # 2.0.0
 * Breaking: Shopware 6.6 support was removed; Shopware 6.7 with Storefront and Administration is now required
 * Security: Toolbar bearer tokens now use Shopware's complete token validation, including expiry, revocation, active-user, and password-change checks

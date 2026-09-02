@@ -17,10 +17,9 @@ export default class AdminToolbarPlugin extends Plugin {
         let verified = false;
 
         try {
-            const authUrl = this.el.dataset.toolbarAuthUrl;
+            const authUrl = this._buildAuthUrl();
             if (!authUrl) return;
 
-            // Single request replaces toolbar-session + _info/me + user/{id}
             const response = await fetch(authUrl, {
                 credentials: 'include',
             });
@@ -28,21 +27,57 @@ export default class AdminToolbarPlugin extends Plugin {
             if (response.status !== 200) return;
 
             const data = await response.json();
-            if (!data?.enabled) return;
-
-            verified = true;
+            if (!data?.enabled || !this._mountToolbar(data.html)) return;
 
             const collapsed = localStorage.getItem(STORAGE_KEY) === 'true';
             this._showToolbar(data, collapsed);
+            verified = true;
         } catch (_) {
-            // Network error or non-admin context — keep toolbar hidden
+            // Network, rendering, or storage errors leave no toolbar markup behind.
         } finally {
             if (!verified) {
-                this.el.classList.add('wako-admin-toolbar--hidden');
+                this.el.remove();
                 document.body.style.paddingTop = '';
-
             }
         }
+    }
+
+    _buildAuthUrl() {
+        const authUrl = this.el.dataset.toolbarAuthUrl;
+        if (!authUrl) return null;
+
+        try {
+            const url = new URL(authUrl, window.location.origin);
+            const contextFields = {
+                pageType: this.el.dataset.toolbarPageType,
+                entityId: this.el.dataset.toolbarEntityId,
+                parentId: this.el.dataset.toolbarParentId,
+                cmsPageId: this.el.dataset.toolbarCmsPageId,
+                routeName: this.el.dataset.toolbarRouteName,
+                locale: this.el.dataset.toolbarLocale,
+            };
+
+            Object.entries(contextFields).forEach(([key, value]) => {
+                if (value) url.searchParams.set(key, value);
+            });
+
+            return url.toString();
+        } catch (_) {
+            return null;
+        }
+    }
+
+    _mountToolbar(html) {
+        if (typeof html !== 'string' || html.trim() === '') return false;
+
+        const documentFragment = new DOMParser().parseFromString(html, 'text/html');
+        const toolbar = documentFragment.body.querySelector('[data-admin-toolbar-root]');
+        if (!toolbar) return false;
+
+        this.el.replaceWith(toolbar);
+        this.el = toolbar;
+
+        return true;
     }
 
     _showToolbar(session, collapsed) {

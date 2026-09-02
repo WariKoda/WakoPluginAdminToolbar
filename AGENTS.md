@@ -14,7 +14,7 @@ A Shopware 6 storefront plugin that displays a fixed admin toolbar at the top of
 
 ### Authentication, ACL & Action Flow
 
-The toolbar now uses a **minimal auth endpoint plus dedicated server-side action endpoints** with mandatory **Shopware ACL / role privilege checks**. The flow:
+The toolbar uses an **authenticated rendering endpoint plus dedicated server-side action endpoints** with mandatory **Shopware ACL / role privilege checks**. The flow:
 
 1. Storefront JS fetches `GET /{administrationPath}/toolbar-auth` using a server-generated route URL
 2. The controller reads the `bearerAuth` cookie server-side under `/admin`
@@ -22,12 +22,13 @@ The toolbar now uses a **minimal auth endpoint plus dedicated server-side action
 4. The user is loaded from the database together with assigned `aclRoles`
 5. The opt-in custom field `wako_admin_toolbar_enabled` is checked
 6. The plugin-specific base privilege `wako_admin_toolbar:use` is required to expose the toolbar at all
-7. The endpoint returns only minimal state plus capability flags derived from Shopware ACL
-8. Toolbar actions use dedicated server-side endpoints below Shopware's configured Administration path instead of exposing reusable admin credentials to storefront JS:
+7. The endpoint returns capability flags and server-rendered toolbar HTML only after authorization succeeds
+8. The initial storefront response contains only a neutral bootstrap element with page context, so anonymous users, disabled users, and crawlers receive no toolbar links or text
+9. Toolbar actions use dedicated server-side endpoints below Shopware's configured Administration path instead of exposing reusable admin credentials to storefront JS:
    - `DELETE /{administrationPath}/toolbar-clear-cache`
    - `GET /{administrationPath}/toolbar-variants/{parentId}`
    - `GET /{administrationPath}/toolbar-customer-context`
-9. Every endpoint performs its **own server-side privilege checks**
+10. Every endpoint performs its **own server-side privilege checks**
 
 **Important:** The admin bearer token must never be returned to storefront JavaScript. Customer context is lazy-loaded on first interaction and the sales channel is derived server-side from the session. UI visibility is never a substitute for backend authorization.
 
@@ -39,8 +40,9 @@ The toolbar now uses a **minimal auth endpoint plus dedicated server-side action
 | Custom field installer | `src/Installer/CustomFieldInstaller.php` | Creates `wako_admin_toolbar` custom field set on `user` entity with toolbar enablement and per-feature preference fields |
 | Auth/action controller | `src/Controller/AdminToolbarAuthController.php` | Resolves toolbar session, validates JWT, evaluates ACL roles/privileges, serves capability flags, clears cache, loads variants, and returns customer context |
 | Page data subscriber | `src/Subscriber/ToolbarPageDataSubscriber.php` | Attaches `wakoAdminToolbar` extension to page structs (pageType, entityId, parentId, cmsPageId) |
-| Twig template | `src/Resources/views/storefront/component/admin-toolbar.html.twig` | Full toolbar markup with context-aware admin links and dropdown shells annotated for feature-level permission gating |
-| Storefront JS | `src/Resources/app/storefront/src/js/admin-toolbar/admin-toolbar.plugin.js` | `AdminToolbarPlugin` — session check, capability gating, copy ID, clear cache, variant dropdown, lazy customer context, collapse/expand |
+| Bootstrap template | `src/Resources/views/storefront/component/admin-toolbar-bootstrap.html.twig` | Cache-safe empty mount point with validated page-context inputs for the auth request |
+| Twig template | `src/Resources/views/storefront/component/admin-toolbar.html.twig` | Authenticated toolbar fragment with context-aware admin links and feature-level permission annotations |
+| Storefront JS | `src/Resources/app/storefront/src/js/admin-toolbar/admin-toolbar.plugin.js` | `AdminToolbarPlugin` — session check, authenticated fragment mounting, capability gating, copy ID, clear cache, variant dropdown, lazy customer context, collapse/expand |
 | SCSS | `src/Resources/app/storefront/src/scss/base.scss` | All styles scoped under `.wako-admin-toolbar` |
 | Admin ACL registration | `src/Resources/app/administration/src/acl/` | Registers plugin privileges in the Shopware administration role editor |
 | Admin settings module | `src/Resources/app/administration/src/module/wako-admin-toolbar-settings/` | Current-user admin module for toolbar enable/disable and per-feature preferences, gated by ACL and plugin config |
@@ -151,7 +153,7 @@ bin/console cache:clear
 - Don't add sensitive data to the `/admin/toolbar-auth` response — keep it minimal
 - Don't hardcode admin URLs — always use the configurable `adminBasePath`
 - Don't forget to handle the collapsed/expanded state via `localStorage`
-- Don't break HTTP cache — the toolbar is rendered `display:none` by default and only revealed client-side
+- Don't break HTTP cache — the initial storefront response must contain only the neutral toolbar bootstrap element; render and mount the full toolbar only after successful authorization
 - Don't ship new actions, endpoints, or edit links without explicit Shopware ACL / privilege integration
 - Don't rely on hidden buttons, disabled controls, or missing links as security controls
 - Don't use only `wako_admin_toolbar_enabled` to authorize access to functionality

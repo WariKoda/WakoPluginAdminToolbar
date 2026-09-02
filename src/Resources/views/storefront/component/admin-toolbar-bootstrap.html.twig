@@ -1,0 +1,22 @@
+{% set toolbarExtension = page.extensions.wakoAdminToolbar %}
+{% set pageType = toolbarExtension ? toolbarExtension['pageType'] : 'generic' %}
+{% set entityId = toolbarExtension ? toolbarExtension['entityId'] : null %}
+{% set parentId = toolbarExtension ? toolbarExtension['parentId'] : null %}
+{% set cmsPageId = toolbarExtension ? toolbarExtension['cmsPageId'] : null %}
+{% set routeName = app.request.attributes.get('_route') %}
+
+{# CmsController::pageFull() fires no PageLoadedEvent. #}
+{% if routeName == 'frontend.cms.page.full' %}
+    {% set pageType = 'cmsPage' %}
+    {% set cmsPageId = app.request.attributes.get('id') %}
+{% endif %}
+
+<div id="wako-admin-toolbar-bootstrap"
+     data-admin-toolbar="true"
+     data-toolbar-auth-url="{{ path('wako.admin.toolbar.auth') }}"
+     data-toolbar-page-type="{{ pageType }}"
+     data-toolbar-locale="{{ app.request.locale }}"
+     {% if entityId %}data-toolbar-entity-id="{{ entityId }}"{% endif %}
+     {% if parentId %}data-toolbar-parent-id="{{ parentId }}"{% endif %}
+     {% if cmsPageId %}data-toolbar-cms-page-id="{{ cmsPageId }}"{% endif %}
+     {% if routeName %}data-toolbar-route-name="{{ routeName }}"{% endif %}></div>

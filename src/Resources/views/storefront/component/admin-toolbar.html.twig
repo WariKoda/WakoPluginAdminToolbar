@@ -1,39 +1,5 @@
 {% block wako_admin_toolbar %}
-    {#
-    Admin Toolbar — only becomes visible when JS confirms a valid admin session
-    (bearerAuth cookie present + /api/_info/me returns 200).
-    Always rendered as display:none to be cache-safe.
-    #}
-
-    {% set toolbarExtension = page.extensions.wakoAdminToolbar %}
-    {% set adminBasePath = config('WakoPluginAdminToolbar.config.adminBasePath') %}
-    {% set adminBasePath = adminBasePath is not empty ? adminBasePath : '/admin' %}
-    {% if adminBasePath|slice(0, 1) != '/' %}
-        {% set adminBasePath = '/admin' %}
-    {% endif %}
-    {% set adminBaseUrl = app.request.attributes.get('sw-sales-channel-absolute-base-url') ~ adminBasePath %}
-
-    {% set pageType  = toolbarExtension ? toolbarExtension['pageType']  : 'generic' %}
-    {% set entityId  = toolbarExtension ? toolbarExtension['entityId']  : null %}
-    {% set parentId  = toolbarExtension ? toolbarExtension['parentId']  : null %}
-    {% set cmsPageId = toolbarExtension ? toolbarExtension['cmsPageId'] : null %}
-    {% set routeName = app.request.attributes.get('_route') %}
-    {% set customerContextShowEmailConfig = config('WakoPluginAdminToolbar.config.customerContextShowEmail') %}
-    {% set customerContextShowCustomerNumberConfig = config('WakoPluginAdminToolbar.config.customerContextShowCustomerNumber') %}
-    {% set customerContextShowRulesConfig = config('WakoPluginAdminToolbar.config.customerContextShowRules') %}
-    {% set customerContextShowEmail = customerContextShowEmailConfig is null ? false : customerContextShowEmailConfig %}
-    {% set customerContextShowCustomerNumber = customerContextShowCustomerNumberConfig is null ? true : customerContextShowCustomerNumberConfig %}
-    {% set customerContextShowRules = customerContextShowRulesConfig is null ? false : customerContextShowRulesConfig %}
-
-    {#
-    /page/cms/{id} is rendered by CmsController::pageFull() which fires no
-    PageLoadedEvent, so our subscriber never runs. Detect this route directly.
-    #}
-    {% if routeName == 'frontend.cms.page.full' %}
-        {% set pageType  = 'cmsPage' %}
-        {% set cmsPageId = app.request.attributes.get('id') %}
-    {% endif %}
-
+    {# Rendered only after the auth endpoint confirms toolbar access. #}
     {% set hasContextLink =
         (pageType == 'product' and entityId) or
         (pageType == 'navigation' and (cmsPageId or entityId)) or
@@ -94,17 +60,17 @@
         </svg>
     {% endset %}
 
-    {% sw_include '@WakoPluginAdminToolbar/storefront/component/admin-toolbar-icons.html.twig' %}
-
     <div id="wako-admin-toolbar"
          class="wako-admin-toolbar wako-admin-toolbar--hidden"
-         data-admin-toolbar="true"
+         data-admin-toolbar-root="true"
          data-admin-base-url="{{ adminBaseUrl }}"
          data-toolbar-auth-url="{{ path('wako.admin.toolbar.auth') }}"
          data-toolbar-clear-cache-url="{{ path('wako.admin.toolbar.clear_cache') }}"
          data-toolbar-variants-url-template="{{ path('wako.admin.toolbar.variants', { parentId: '__PARENT_ID__' }) }}"
          data-toolbar-customer-context-url="{{ path('wako.admin.toolbar.customer_context') }}"
          data-rules-show-all-label="{{ 'adminToolbar.showAllRules'|trans|striptags }}">
+
+        {% sw_include '@WakoPluginAdminToolbar/storefront/component/admin-toolbar-icons.html.twig' %}
 
         {# Full toolbar — shown when expanded #}
         <div class="wako-admin-toolbar__inner">
