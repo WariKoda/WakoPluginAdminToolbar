@@ -1,0 +1,9 @@
+{
+  "name": "wako-plugin-admin-toolbar-administration",
+  "private": true,
+  "scripts": {
+    "lint": "node ../../../../../../../vendor/shopware/administration/Resources/app/administration/node_modules/.bin/eslint --config ../../../../../../../vendor/shopware/administration/Resources/app/administration/eslint.config.mjs src --cache",
+    "lint:fix": "node ../../../../../../../vendor/shopware/administration/Resources/app/administration/node_modules/.bin/eslint --config ../../../../../../../vendor/shopware/administration/Resources/app/administration/eslint.config.mjs src --fix",
+    "lint:debugging": "node ../../../../../../../vendor/shopware/administration/Resources/app/administration/node_modules/.bin/eslint --config ../../../../../../../vendor/shopware/administration/Resources/app/administration/eslint.config.mjs"
+  }
+}

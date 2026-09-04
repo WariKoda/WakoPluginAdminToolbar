@@ -1,0 +1,12 @@
+{
+  "name": "wako-plugin-admin-toolbar-storefront",
+  "private": true,
+  "scripts": {
+    "eslint:app": "node ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/node_modules/.bin/eslint --no-error-on-unmatched-pattern --config ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/eslint.config.js",
+    "lint:js": "node ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/node_modules/.bin/eslint --no-error-on-unmatched-pattern --config ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/eslint.config.js ./src",
+    "lint:js:fix": "node ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/node_modules/.bin/eslint --no-error-on-unmatched-pattern --fix --config ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/eslint.config.js ./src",
+    "stylelint:app": "node ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/node_modules/.bin/stylelint --config ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/stylelint.config.js",
+    "lint:scss": "node ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/node_modules/.bin/stylelint --config ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/stylelint.config.js ./src/scss",
+    "lint:scss-fix": "node ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/node_modules/.bin/stylelint --config ../../../../../../../vendor/shopware/storefront/Resources/app/storefront/stylelint.config.js ./src/scss --fix"
+  }
+}
