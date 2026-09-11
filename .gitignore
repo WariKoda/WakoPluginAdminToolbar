@@ -1,4 +1,8 @@
 meteor-kit-icons
+/vendor/
+/composer.lock
+/src/Storefront/
+/src/Resources/app/administration/package-lock.json
 .phpunit.cache/
 .claude
 AUDIT.md

@@ -1,8 +1,16 @@
+# 2.2.0
+
+* Added: The Administration sidebar logo can open the storefront in a new tab, controlled through the plugin configuration
+* Added: The logo link can target a selected sales channel and otherwise falls back to the first active storefront sales channel with a domain
+* Fixed: The clickable logo keeps Shopware's original appearance and remains clickable while the Administration menu is collapsed
+
 # 2.1.0
+
 * Fixed: Anonymous visitors, crawlers, disabled users, and users without toolbar access no longer receive the hidden toolbar markup or Administration links in the initial storefront HTML
 * Changed: The authenticated toolbar fragment is now rendered by the auth endpoint and mounted client-side after successful authorization
 
 # 2.0.0
+
 * Breaking: Shopware 6.6 support was removed; Shopware 6.7 with Storefront and Administration is now required
 * Security: Toolbar bearer tokens now use Shopware's complete token validation, including expiry, revocation, active-user, and password-change checks
 * Fixed: Plugin updates now add missing per-user feature custom fields to existing installations
@@ -16,12 +24,15 @@
 * Changed: PHP source now passes PHPStan level 8 without errors
 
 # 1.5.2
+
 * Fixed: added missing compiled JS files to the plugin package
 
 # 1.5.1
+
 * Changed: Shortened the plugin configuration hint text to better distinguish global toolbar settings from personal user preferences
 
 # 1.5.0
+
 * Added: Personal per-user feature preferences for product links, category links, CMS/layout links, and customer context in the Admin Toolbar settings module
 * Added: Global plugin configuration switches for product edit links, category links, and CMS/layout links, with server-side capability enforcement
 * Changed: The plugin configuration card **Privacy & Data Access** was renamed to **Customer Context**
@@ -31,6 +42,7 @@
 * Security: Feature preferences and global feature switches are enforced server-side when building toolbar capabilities and handling privileged toolbar actions
 
 # 1.4.3
+
 * Added: New plugin configuration card **Privacy & Data Access** with per-field toggles for customer email, customer number, and active rules in the customer context (email and rules disabled by default)
 * Added: Customer context dropdown now shows an explicit "Not logged in as customer" empty state when no customer is in session
 * Security: Clear-cache action now enforces same-origin protection to mitigate cross-site request risks
@@ -39,21 +51,25 @@
 * Changed: Improved padding of the "no customer context" empty state in the customer dropdown
 
 # 1.4.2
+
 * Added: Added a hint banner to the plugin configuration that points users to the personal toolbar settings page under **Settings → Plugins → Admin Toolbar**
 * Changed: The plugin configuration hint now uses administration snippets for proper locale-aware rendering in Shopware Admin
 * Changed: Improved spacing between the configuration hint text and its action button
 
 # 1.4.1
+
 * Changed: Cleaned up the storefront SCSS for the admin toolbar without changing the intended feature set
 * Changed: Simplified and clarified responsive toolbar styling to keep the stylesheet easier to maintain
 
 # 1.4.0
+
 * Changed: Active rules in the customer context now show all rules from the current SalesChannelContext instead of filtering to assigned core rule usages
 * Changed: Customer context rule preview now shows the top 5 rules by priority and opens a dedicated modal for the full list
 * Changed: Refined the active rules modal and rule card design to better match the admin toolbar style while staying compact
 * Changed: Toolbar responsive behavior was reworked with Bootstrap breakpoint mixins; navigation links, route display, copy-id, and cache actions now appear only on larger viewports as intended
 
 # 1.3.1
+
 * Changed: Refactored `AdminToolbarAuthController` into dedicated toolbar services for session resolution, privilege evaluation, capability building, variant loading, customer context loading, and active rule lookup
 * Changed: Introduced a dedicated `ToolbarSession` value object to replace the previous array-based toolbar session state
 * Changed: Kept existing routes, response payloads, and the privilege model unchanged during the refactoring
@@ -61,6 +77,7 @@
 * Security: Preserved existing server-side JWT validation, ACL enforcement, and session-based customer context resolution during the refactoring
 
 # 1.3.0
+
 * Added: Dedicated administration settings module for the current user under **Settings → Plugins → Admin Toolbar**
 * Added: Current users can now manage toolbar activation outside of the Shopware profile page
 * Added: Prepared an "Available features" section with disabled placeholder toggles for future per-user feature preferences
@@ -73,6 +90,7 @@
 * Removed: Profile page override for toolbar activation
 
 # 1.2.4
+
 * Security: Removed the admin bearer token from `/admin/toolbar-auth` responses
 * Security: Replaced storefront-side admin API usage with dedicated server-side toolbar endpoints for cache clearing and variant loading
 * Security: `/admin/toolbar-auth` now returns only the minimal `enabled` flag
@@ -81,13 +99,16 @@
 * Changed: Customer name is now displayed only inside the dropdown content; the trigger keeps its static label
 
 # 1.2.3
+
 * Added: Added customer context to the admin toolbar
 * Added: Dropdown UI for customer context with customer information and active rules
 
 # 1.2.2
+
 * Changed: Switched to Meteor Kit icons
 
 # 1.2.1
+
 * Added: Quick-access navigation links for Orders, Extensions, and Settings in the left toolbar area
 * Added: New SVG icons `receipt`, `extension`, `cog`, `chevron-up`
 * Added: Storefront snippets for `orders`, `extensions`, `settings` (`en-GB` / `de-DE`)
@@ -96,6 +117,7 @@
 * Changed: Navigation links and the center area are hidden on screens ≤576px
 
 # 1.2.0
+
 * Security: The `/admin/toolbar-auth` endpoint now validates the JWT signature cryptographically with Shopware's HMAC-SHA256 key (`APP_SECRET`) before returning any data; forged tokens are rejected
 * Security: Removed `email` from the auth response; only `firstName` and `lastName` are returned now
 * Security: Removed all `X-Wako-Debug` response headers and the `debug()` method; error responses are now consistently `204 No Content` without distinguishable extra information
@@ -109,6 +131,7 @@
 * Added: `admin-toolbar-icons.html.twig` as a standalone SVG sprite with 8 icon symbols (check, chevron-down, copy, cube, layout, refresh, user, x)
 
 # 1.1.2
+
 * Changed: Replaced three sequential JS API calls (`toolbar-session` + `_info/me` + `user/{id}`) with a single `GET /admin/toolbar-auth` endpoint that reads the bearer cookie, decodes the JWT, and loads the user in one DB roundtrip; this significantly speeds up toolbar initialization
 * Changed: Outer toolbar shell now appears synchronously by checking the `bearerAuth` cookie via `document.cookie`, eliminating layout shift during page load
 * Changed: Removed `AdminToolbarSessionController` and its `/admin/toolbar-session` route, as it was replaced by `/admin/toolbar-auth`
@@ -116,6 +139,7 @@
 * Fixed: `UserEntity::getActive()` is now used correctly (instead of `isActive()`)
 
 # 1.1.0
+
 * Added: Per-user opt-in toggle on the admin profile page (Settings → Profile → General)
 * Added: `CustomFieldInstaller` creates the boolean custom field `wako_admin_toolbar_enabled` on the user entity during plugin installation and removes it cleanly during uninstall
 * Added: Toolbar is now shown only for admin users who explicitly enabled it
@@ -130,6 +154,7 @@
 * Removed: `data-admin-toolbar-options` JSON attribute; page data is no longer serialized into the DOM
 
 # 1.0.0
+
 * Added: Initial release
 * Added: Injected a fixed toolbar into every storefront page, hidden by default
 * Added: Client-side admin session detection via the `bearerAuth` cookie and `/api/_info/me`

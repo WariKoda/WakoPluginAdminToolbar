@@ -1,0 +1,15 @@
+{% block sw_admin_menu_header_logo %}
+<a
+    v-if="storefrontUrl"
+    class="sw-admin-menu__header-logo is--storefront-link"
+    :href="storefrontUrl"
+    target="_blank"
+    rel="noopener noreferrer"
+    :aria-label="$t('wako-admin-toolbar.adminMenu.openStorefront')"
+></a>
+<div
+    v-else
+    class="sw-admin-menu__header-logo"
+    role="img"
+></div>
+{% endblock %}

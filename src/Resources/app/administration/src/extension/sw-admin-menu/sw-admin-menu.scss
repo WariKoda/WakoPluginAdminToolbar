@@ -1,0 +1,16 @@
+.sw-admin-menu {
+    &:not(.is--expanded) .sw-admin-menu__header .collapsible-text {
+        pointer-events: none;
+    }
+
+    .sw-admin-menu__header-logo.is--storefront-link {
+        cursor: pointer;
+        display: block;
+        text-decoration: none;
+
+        &::after {
+            content: none;
+            display: none;
+        }
+    }
+}

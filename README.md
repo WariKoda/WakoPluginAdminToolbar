@@ -1,6 +1,6 @@
 # WakoPluginAdminToolbar
 
-A Shopware 6 plugin that adds an administration toolbar to the storefront. Eligible administration users can open the current product, category, CMS page, or shopping experience in the Administration without first searching for it.
+A Shopware 6 plugin that connects the storefront and Administration in both directions. Eligible administration users can edit the current storefront entity without first searching for it, and the Administration logo can open the storefront in a new tab.
 
 ## Requirements
 
@@ -48,6 +48,7 @@ The toolbar provides:
 - active rule visibility
 - copy-to-clipboard helpers
 - cache clear action
+- optional Storefront shortcut on the Administration sidebar logo
 - global feature switches for product links, category links, and CMS/layout links
 - per-user feature preferences for product links, category links, CMS/layout links, and customer context
 
@@ -79,7 +80,7 @@ The public storefront HTML contains only an empty toolbar bootstrap element. The
 ## Feature-to-privilege mapping
 
 | Feature | Required privilege(s) | Additional gates |
-|---|---|---|
+| --- | --- | --- |
 | Use toolbar at all | `wako_admin_toolbar:use` | Per-user toolbar opt-in |
 | Clear cache | `system:clear:cache` | None |
 | Load variants | `product:read` | Product links enabled globally and for the user |
@@ -89,6 +90,7 @@ The public storefront HTML contains only an empty toolbar bootstrap element. The
 | Edit landing page | `cms_page:update` + `landing_page:update` | CMS/layout links enabled globally and for the user |
 | View customer context | `customer:read` | Customer context enabled for the user and at least one customer context data field enabled globally |
 | View active rules / rule links | `rule:read` | Customer context enabled for the user and active rules enabled globally |
+| Open storefront from the Administration logo | `system_config:read`, `sales_channel:read` | Logo link enabled globally and a storefront domain available |
 
 ## Adding privileged features
 
@@ -124,9 +126,13 @@ Toolbar activation is no longer part of the Shopware profile page. The plugin st
 
 The plugin configuration contains:
 
+- `logoStorefrontLinkEnabled` to make the Administration sidebar logo open the storefront
+- `logoStorefrontSalesChannelId` to select the target sales channel
 - `adminBasePath` for the Administration base path
 - global toolbar feature switches for product links, category links, and CMS/layout links
 - customer context data controls for email, customer number, and active rules
+
+When no target sales channel is selected, the logo link uses the first active storefront sales channel with a configured domain. Shopware's `domainLinkService` chooses the domain that best matches the current Administration language. If the current user cannot read the plugin configuration or sales channels, or no storefront domain exists, the logo remains unchanged and does not become a link.
 
 The customer context dropdown only renders sections whose data fields are enabled in the plugin configuration.
 
@@ -139,6 +145,7 @@ The customer context dropdown only renders sections whose data fields are enable
 - `src/Resources/views/storefront/component/admin-toolbar.html.twig`
 - `src/Resources/app/storefront/src/js/admin-toolbar/admin-toolbar.plugin.js`
 - `src/Resources/app/administration/src/acl/index.js`
+- `src/Resources/app/administration/src/extension/sw-admin-menu/`
 - `src/Resources/app/administration/src/module/wako-admin-toolbar-settings/`
 - `src/Resources/app/administration/src/snippet/en-GB.json`
 - `src/Resources/app/administration/src/snippet/de-DE.json`

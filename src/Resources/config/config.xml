@@ -13,6 +13,30 @@
             <routeName>wako.admin.toolbar.settings.index</routeName>
         </component>
 
+        <input-field type="bool">
+            <name>logoStorefrontLinkEnabled</name>
+            <label>Make admin logo open the storefront</label>
+            <label lang="en-GB">Make admin logo open the storefront</label>
+            <label lang="de-DE">Admin-Logo öffnet die Storefront</label>
+            <helpText>When enabled, clicking the Administration sidebar logo opens the storefront in a new tab.</helpText>
+            <helpText lang="en-GB">When enabled, clicking the Administration sidebar logo opens the storefront in a new tab.</helpText>
+            <helpText lang="de-DE">Wenn aktiviert, öffnet ein Klick auf das Logo in der Administrations-Seitenleiste die Storefront in einem neuen Tab.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <component name="sw-entity-single-select">
+            <name>logoStorefrontSalesChannelId</name>
+            <entity>sales_channel</entity>
+            <label>Storefront sales channel for logo link</label>
+            <label lang="en-GB">Storefront sales channel for logo link</label>
+            <label lang="de-DE">Storefront-Verkaufskanal für den Logo-Link</label>
+            <helpText>Leave empty to use the first active storefront sales channel that has a domain.</helpText>
+            <helpText lang="en-GB">Leave empty to use the first active storefront sales channel that has a domain.</helpText>
+            <helpText lang="de-DE">Leer lassen, um den ersten aktiven Storefront-Verkaufskanal mit Domain zu verwenden.</helpText>
+            <placeholder>Select a sales channel...</placeholder>
+            <placeholder lang="de-DE">Verkaufskanal auswählen ...</placeholder>
+        </component>
+
         <input-field type="text">
             <name>adminBasePath</name>
             <label>Admin Base Path</label>

@@ -1,5 +1,8 @@
 {
     "wako-admin-toolbar": {
+        "adminMenu": {
+            "openStorefront": "Open storefront in a new tab"
+        },
         "pluginConfigHint": {
             "headline": "Global toolbar settings",
             "description": "Configure global defaults here. Personal toolbar visibility and feature preferences are managed per user under Settings > Plugins > Admin Toolbar.",

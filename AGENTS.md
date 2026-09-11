@@ -35,7 +35,7 @@ The toolbar uses an **authenticated rendering endpoint plus dedicated server-sid
 ### Key Components
 
 | Component | Path | Purpose |
-|-----------|------|---------|
+| ----------- | ------ | --------- |
 | Plugin bootstrap | `src/WakoPluginAdminToolbar.php` | Install/uninstall custom fields via `CustomFieldInstaller` and enrich Shopware ACL privileges |
 | Custom field installer | `src/Installer/CustomFieldInstaller.php` | Creates `wako_admin_toolbar` custom field set on `user` entity with toolbar enablement and per-feature preference fields |
 | Auth/action controller | `src/Controller/AdminToolbarAuthController.php` | Resolves toolbar session, validates JWT, evaluates ACL roles/privileges, serves capability flags, clears cache, loads variants, and returns customer context |
@@ -46,10 +46,12 @@ The toolbar uses an **authenticated rendering endpoint plus dedicated server-sid
 | SCSS | `src/Resources/app/storefront/src/scss/base.scss` | All styles scoped under `.wako-admin-toolbar` |
 | Admin ACL registration | `src/Resources/app/administration/src/acl/` | Registers plugin privileges in the Shopware administration role editor |
 | Admin settings module | `src/Resources/app/administration/src/module/wako-admin-toolbar-settings/` | Current-user admin module for toolbar enable/disable and per-feature preferences, gated by ACL and plugin config |
+| Admin menu logo link | `src/Resources/app/administration/src/extension/sw-admin-menu/` | Makes the Administration sidebar logo open the configured storefront in a new tab when plugin config allows it |
 
 ### Page Type Detection
 
 The subscriber listens to:
+
 - `GenericPageLoadedEvent` → baseline `generic` type
 - `ProductPageLoadedEvent` → `product` (includes parentId for variants, cmsPageId for custom layouts)
 - `NavigationPageLoadedEvent` → `navigation` (category or CMS page)
@@ -68,6 +70,10 @@ The subscriber listens to:
 - **Copy entity ID:** Copies current entity UUID to clipboard
 - **Clear cache:** Calls the server-generated toolbar clear-cache endpoint
 - **Collapse/expand:** Persists state in `localStorage` (`wako.admin-toolbar.collapsed`)
+
+### Administration extras
+
+- **Admin logo storefront link:** Optional click on `sw-admin-menu__header-logo` opens the configured storefront sales channel in a new tab
 
 ### ACL & Permission Handling (Mandatory)
 
@@ -93,8 +99,10 @@ This plugin must always adhere to the Shopware Administration role and privilege
 - Landing page edit link: `cms_page:update` + `landing_page:update`
 - Customer context: `customer:read`
 - Active rules list / rule detail links: `rule:read`
+- Admin logo storefront link: no extra plugin privilege; reading the global setting and resolving the URL needs `system_config:read` and `sales_channel:read` (without them the logo stays unchanged)
 
 Effective feature availability is additionally gated by:
+
 - per-user feature preferences stored on the `user` custom fields
 - global plugin configuration for product links, category links, CMS/layout links, and customer context data fields
 
@@ -116,7 +124,7 @@ When adding a new action, endpoint, admin route, or toolbar button:
 - Current-user toolbar preferences belong in the dedicated administration module, not in the Shopware profile page
 - Translation snippets in `src/Resources/snippet/{locale}/` (storefront) and `src/Resources/app/administration/src/snippet/` (admin)
 - Both `en-GB` and `de-DE` snippets are mandatory for all user-facing strings
-- Plugin config in `config.xml` — includes `adminBasePath`, global toolbar feature switches, and customer-context data exposure settings
+- Plugin config in `config.xml` — includes `adminBasePath`, the admin logo storefront link, global toolbar feature switches, and customer-context data exposure settings
 - Services registered in `src/Resources/config/services.xml`
 - Routes imported via attribute-based routing from `src/Controller/`
 - Every new privileged feature must integrate with Shopware ACL/privileges end-to-end: admin privilege registration, backend enforcement, and UI gating
@@ -152,6 +160,7 @@ bin/console cache:clear
 - Don't use global CSS selectors — everything must be scoped under `.wako-admin-toolbar`
 - Don't add sensitive data to the `/admin/toolbar-auth` response — keep it minimal
 - Don't hardcode admin URLs — always use the configurable `adminBasePath`
+- Don't hardcode the storefront URL for the admin logo link — resolve it from the configured or fallback storefront sales channel via `domainLinkService`
 - Don't forget to handle the collapsed/expanded state via `localStorage`
 - Don't break HTTP cache — the initial storefront response must contain only the neutral toolbar bootstrap element; render and mount the full toolbar only after successful authorization
 - Don't ship new actions, endpoints, or edit links without explicit Shopware ACL / privilege integration
