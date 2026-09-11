@@ -33,6 +33,12 @@
       "WakoPluginAdminToolbar\\Tests\\Unit\\": "tests/unit/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": false,
+      "symfony/runtime": false
+    }
+  },
   "scripts": {
     "analyse": "phpstan analyse src --level=8 --memory-limit=1G",
     "test:unit": "phpunit -c phpunit.xml.dist"
