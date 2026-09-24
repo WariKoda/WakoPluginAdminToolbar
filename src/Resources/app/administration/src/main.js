@@ -1,6 +1,7 @@
 import './acl';
 import './component/wako-admin-toolbar-plugin-config-hint';
 import './extension/sw-admin-menu';
+import './extension/sw-page';
 import './module/wako-admin-toolbar-settings';
 
 import enGB from './snippet/en-GB.json';

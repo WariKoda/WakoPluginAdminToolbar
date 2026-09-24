@@ -3,6 +3,12 @@
         "adminMenu": {
             "openStorefront": "Open storefront in a new tab"
         },
+        "cacheClear": {
+            "label": "Clear cache",
+            "started": "Clearing cache…",
+            "success": "Cache cleared.",
+            "error": "Cache could not be fully cleared."
+        },
         "pluginConfigHint": {
             "headline": "Global toolbar settings",
             "description": "Configure global defaults here. Personal toolbar visibility and feature preferences are managed per user under Settings > Plugins > Admin Toolbar.",
