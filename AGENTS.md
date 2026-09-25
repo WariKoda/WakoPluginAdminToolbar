@@ -30,6 +30,8 @@ The toolbar uses an **authenticated rendering endpoint plus dedicated server-sid
    - `GET /{administrationPath}/toolbar-customer-context`
 10. Every endpoint performs its **own server-side privilege checks**
 
+The Administration page header buttons do not use these storefront endpoints. Cache clearing uses Shopware's own cache API, and theme compilation uses `POST /api/_action/wako-admin-toolbar/theme-compile/{salesChannelId}` with `_acl` route checks.
+
 **Important:** The admin bearer token must never be returned to storefront JavaScript. Customer context is lazy-loaded on first interaction and the sales channel is derived server-side from the session. UI visibility is never a substitute for backend authorization.
 
 ### Key Components
@@ -46,6 +48,11 @@ The toolbar uses an **authenticated rendering endpoint plus dedicated server-sid
 | SCSS | `src/Resources/app/storefront/src/scss/base.scss` | All styles scoped under `.wako-admin-toolbar` |
 | Admin ACL registration | `src/Resources/app/administration/src/acl/` | Registers plugin privileges in the Shopware administration role editor |
 | Admin settings module | `src/Resources/app/administration/src/module/wako-admin-toolbar-settings/` | Current-user admin module for toolbar enable/disable and per-feature preferences, gated by ACL and plugin config |
+| Theme compile controller | `src/Controller/AdminToolbarThemeController.php` | Admin API endpoint for theme compilation, protected by `_acl` |
+| Theme compile service | `src/Service/Toolbar/ToolbarThemeCompileService.php` | Checks the global switch and the storefront sales channel, then compiles its assigned theme without reassigning it |
+| Admin page header buttons | `src/Resources/app/administration/src/extension/sw-page/` | Overrides `sw-page` and `sw-meteor-page` to add the cache clear button and mount the theme compile component |
+| Theme compile component | `src/Resources/app/administration/src/component/wako-admin-toolbar-theme-compile/` | Page header button and sales channel dialog for theme compilation |
+| Admin config loader | `src/Resources/app/administration/src/service/admin-toolbar-config.js` | Loads the plugin config once per Administration session for the page header buttons |
 | Admin menu logo link | `src/Resources/app/administration/src/extension/sw-admin-menu/` | Makes the Administration sidebar logo open the configured storefront in a new tab when plugin config allows it |
 
 ### Page Type Detection
@@ -74,6 +81,8 @@ The subscriber listens to:
 ### Administration extras
 
 - **Admin logo storefront link:** Optional click on `sw-admin-menu__header-logo` opens the configured storefront sales channel in a new tab
+- **Page header cache clear button:** Optional button next to the notification center, switched by `adminCacheClearButtonEnabled`
+- **Page header theme compile button:** Optional button that compiles the assigned theme of a selected storefront sales channel, switched by `adminThemeCompileButtonEnabled`
 
 ### ACL & Permission Handling (Mandatory)
 
@@ -99,6 +108,8 @@ This plugin must always adhere to the Shopware Administration role and privilege
 - Landing page edit link: `cms_page:update` + `landing_page:update`
 - Customer context: `customer:read`
 - Active rules list / rule detail links: `rule:read`
+- Admin page header cache clear button: `system:clear:cache`; showing it also needs `system_config:read`
+- Admin page header theme compile button: `theme:update` + `theme:read` + `sales_channel:read` (enforced via `_acl` on the API route); showing it also needs `system_config:read`
 - Admin logo storefront link: no extra plugin privilege; reading the global setting and resolving the URL needs `system_config:read` and `sales_channel:read` (without them the logo stays unchanged)
 
 Effective feature availability is additionally gated by:
@@ -124,7 +135,7 @@ When adding a new action, endpoint, admin route, or toolbar button:
 - Current-user toolbar preferences belong in the dedicated administration module, not in the Shopware profile page
 - Translation snippets in `src/Resources/snippet/{locale}/` (storefront) and `src/Resources/app/administration/src/snippet/` (admin)
 - Both `en-GB` and `de-DE` snippets are mandatory for all user-facing strings
-- Plugin config in `config.xml` — includes `adminBasePath`, the admin logo storefront link, global toolbar feature switches, and customer-context data exposure settings
+- Plugin config in `config.xml` — includes `adminBasePath`, the admin logo storefront link, the admin page header button switches, global toolbar feature switches, and customer-context data exposure settings
 - Services registered in `src/Resources/config/services.xml`
 - Routes imported via attribute-based routing from `src/Controller/`
 - Every new privileged feature must integrate with Shopware ACL/privileges end-to-end: admin privilege registration, backend enforcement, and UI gating
@@ -140,17 +151,16 @@ bin/console plugin:refresh
 bin/console plugin:install --activate WakoPluginAdminToolbar
 bin/console cache:clear
 
-# Build storefront (required after JS/SCSS changes)
-./bin/build-storefront.sh
-
-# Build administration (required after admin component changes)
-./bin/build-administration.sh
+# Build Administration and Storefront assets (required after JS/SCSS/admin component changes)
+SHOPWARE_PROJECT_ROOT=$(pwd) shopware-cli extension build custom/plugins/WakoPluginAdminToolbar
 
 # Watch mode (storefront)
 ./bin/watch-storefront.sh
 ```
 
 ## Don't
+
+- Don't build plugin assets with `./bin/build-administration.sh` or `./bin/build-storefront.sh` — use `shopware-cli extension build`
 
 - Don't add HttpOnly to `bearerAuth` cookie handling — the cookie is set by Shopware's admin JS and must remain readable by the admin app
 - Don't expose the admin bearer token to storefront JavaScript
