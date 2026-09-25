@@ -1,3 +1,10 @@
+# 2.3.0
+
+* Added: A cache clear button in the Administration page header clears all caches through Shopware's cache API. It requires `system:clear:cache` and can be turned off in the plugin configuration
+* Added: A theme compile button in the Administration page header compiles the theme assigned to a selected storefront sales channel without changing the assignment. The server requires `theme:update`, `theme:read`, and `sales_channel:read`, and the button can be turned off in the plugin configuration
+* Changed: Both page header buttons read the plugin configuration with a single request per Administration session. Showing them requires `system_config:read`
+* Changed: Plugin assets are built with `shopware-cli extension build`. The Administration bundle no longer ships a source map
+
 # 2.2.0
 
 * Added: The Administration sidebar logo can open the storefront in a new tab, controlled through the plugin configuration

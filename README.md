@@ -49,6 +49,7 @@ The toolbar provides:
 - copy-to-clipboard helpers
 - cache clear action
 - optional Storefront shortcut on the Administration sidebar logo
+- optional cache clear and theme compile buttons in the Administration page header
 - global feature switches for product links, category links, and CMS/layout links
 - per-user feature preferences for product links, category links, CMS/layout links, and customer context
 
@@ -82,7 +83,9 @@ The public storefront HTML contains only an empty toolbar bootstrap element. The
 | Feature | Required privilege(s) | Additional gates |
 | --- | --- | --- |
 | Use toolbar at all | `wako_admin_toolbar:use` | Per-user toolbar opt-in |
-| Clear cache | `system:clear:cache` | None |
+| Clear cache from the storefront toolbar | `system:clear:cache` | None |
+| Clear cache from the Administration page header | `system:clear:cache` | Button enabled globally; `system_config:read` to read that setting |
+| Compile theme from the Administration page header | `theme:update`, `theme:read`, `sales_channel:read` | Button enabled globally; `system_config:read` to read that setting; the sales channel needs an assigned theme |
 | Load variants | `product:read` | Product links enabled globally and for the user |
 | Edit product | `product:update` | Product links enabled globally and for the user |
 | Edit category | `category:update` | Category links enabled globally and for the user |
@@ -128,11 +131,17 @@ The plugin configuration contains:
 
 - `logoStorefrontLinkEnabled` to make the Administration sidebar logo open the storefront
 - `logoStorefrontSalesChannelId` to select the target sales channel
+- `adminCacheClearButtonEnabled` to show the cache clear button in the Administration page header
+- `adminThemeCompileButtonEnabled` to show the theme compile button in the Administration page header
 - `adminBasePath` for the Administration base path
 - global toolbar feature switches for product links, category links, and CMS/layout links
 - customer context data controls for email, customer number, and active rules
 
 When no target sales channel is selected, the logo link uses the first active storefront sales channel with a configured domain. Shopware's `domainLinkService` chooses the domain that best matches the current Administration language. If the current user cannot read the plugin configuration or sales channels, or no storefront domain exists, the logo remains unchanged and does not become a link.
+
+The Administration reads the page header button switches once per session. Reload the Administration after changing them.
+
+The theme compile button opens a dialog to select a storefront sales channel and compiles the theme already assigned to it. Depending on the shop configuration, Shopware compiles in the background and reports the result through its notifications.
 
 The customer context dropdown only renders sections whose data fields are enabled in the plugin configuration.
 
@@ -141,11 +150,16 @@ The customer context dropdown only renders sections whose data fields are enable
 - `src/WakoPluginAdminToolbar.php`
 - `src/Controller/AdminToolbarAuthController.php`
 - `src/Controller/AdminToolbarProfileController.php`
+- `src/Controller/AdminToolbarThemeController.php`
+- `src/Service/Toolbar/ToolbarThemeCompileService.php`
 - `src/Resources/views/storefront/component/admin-toolbar-bootstrap.html.twig`
 - `src/Resources/views/storefront/component/admin-toolbar.html.twig`
 - `src/Resources/app/storefront/src/js/admin-toolbar/admin-toolbar.plugin.js`
 - `src/Resources/app/administration/src/acl/index.js`
 - `src/Resources/app/administration/src/extension/sw-admin-menu/`
+- `src/Resources/app/administration/src/extension/sw-page/`
+- `src/Resources/app/administration/src/component/wako-admin-toolbar-theme-compile/`
+- `src/Resources/app/administration/src/service/admin-toolbar-config.js`
 - `src/Resources/app/administration/src/module/wako-admin-toolbar-settings/`
 - `src/Resources/app/administration/src/snippet/en-GB.json`
 - `src/Resources/app/administration/src/snippet/de-DE.json`

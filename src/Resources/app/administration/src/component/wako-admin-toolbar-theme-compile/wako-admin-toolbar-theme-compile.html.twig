@@ -1,0 +1,47 @@
+{% block wako_admin_toolbar_theme_compile %}
+<div v-if="canCompile" class="wako-admin-toolbar-theme-compile">
+    <mt-button
+        v-tooltip="{ message: $tc('wako-admin-toolbar.themeCompile.label'), width: 'auto' }"
+        variant="tertiary"
+        size="default"
+        square
+        :aria-label="$tc('wako-admin-toolbar.themeCompile.label')"
+        :disabled="isCompiling || undefined"
+        :is-loading="isCompiling"
+        @click="openModal"
+    >
+        <mt-icon name="regular-tools-alt" size="var(--scale-size-20)" />
+    </mt-button>
+
+    <sw-modal
+        v-if="showModal"
+        :title="$tc('wako-admin-toolbar.themeCompile.label')"
+        variant="small"
+        :closable="!isCompiling"
+        @modal-close="closeModal"
+    >
+        <sw-entity-single-select
+            v-model:value="salesChannelId"
+            entity="sales_channel"
+            :criteria="salesChannelCriteria"
+            :label="$tc('wako-admin-toolbar.themeCompile.salesChannel')"
+            :help-text="$tc('wako-admin-toolbar.themeCompile.description')"
+            :placeholder="$tc('wako-admin-toolbar.themeCompile.selectSalesChannel')"
+            :disabled="isCompiling"
+        />
+        <template #modal-footer>
+            <mt-button variant="secondary" :disabled="isCompiling || undefined" @click="closeModal">
+                {{ $tc('wako-admin-toolbar.themeCompile.cancel') }}
+            </mt-button>
+            <mt-button
+                variant="primary"
+                :disabled="!salesChannelId || isCompiling || undefined"
+                :is-loading="isCompiling"
+                @click="compileTheme"
+            >
+                {{ $tc('wako-admin-toolbar.themeCompile.compile') }}
+            </mt-button>
+        </template>
+    </sw-modal>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% block sw_meteor_page_notification_center %}
+<mt-button
+    v-if="canClearWakoCache"
+    v-tooltip="{ message: $tc('wako-admin-toolbar.cacheClear.label'), width: 'auto' }"
+    variant="tertiary"
+    size="default"
+    square
+    :aria-label="$tc('wako-admin-toolbar.cacheClear.label')"
+    :disabled="isClearingWakoCache || undefined"
+    :is-loading="isClearingWakoCache"
+    @click="onClearWakoCache"
+>
+    <mt-icon name="regular-bolt" size="var(--scale-size-20)" />
+</mt-button>
+<wako-admin-toolbar-theme-compile />
+{% parent %}
+{% endblock %}

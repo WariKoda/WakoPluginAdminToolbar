@@ -3,6 +3,22 @@
         "adminMenu": {
             "openStorefront": "Storefront in neuem Tab öffnen"
         },
+        "cacheClear": {
+            "label": "Cache leeren",
+            "started": "Cache wird geleert…",
+            "success": "Cache geleert.",
+            "error": "Cache konnte nicht vollständig geleert werden."
+        },
+        "themeCompile": {
+            "label": "Theme kompilieren",
+            "description": "Kompiliert das aktuell zugewiesene Theme des ausgewählten Storefront-Verkaufskanals, ohne die Zuweisung zu ändern. Je nach Shop-Einstellung läuft die Kompilierung im Hintergrund.",
+            "salesChannel": "Verkaufskanal",
+            "selectSalesChannel": "Verkaufskanal mit zugewiesenem Theme auswählen …",
+            "cancel": "Abbrechen",
+            "compile": "Kompilierung starten",
+            "requested": "Theme-Kompilierung beauftragt. Bei Hintergrundverarbeitung folgt das Ergebnis über die Shopware-Mitteilungen.",
+            "error": "Theme-Kompilierung konnte nicht ausgeführt oder beauftragt werden. Bitte Berechtigungen, Theme-Zuweisung und Serverprotokoll prüfen."
+        },
         "pluginConfigHint": {
             "headline": "Globale Toolbar-Einstellungen",
             "description": "Hier werden globale Vorgaben konfiguriert. Persönliche Sichtbarkeit und Feature-Auswahl verwalten Benutzer unter Einstellungen > Plugins > Admin Toolbar.",

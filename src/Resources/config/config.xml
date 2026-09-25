@@ -37,6 +37,28 @@
             <placeholder lang="de-DE">Verkaufskanal auswählen ...</placeholder>
         </component>
 
+        <input-field type="bool">
+            <name>adminCacheClearButtonEnabled</name>
+            <label>Show cache clear button in the Administration</label>
+            <label lang="en-GB">Show cache clear button in the Administration</label>
+            <label lang="de-DE">Cache-leeren-Button in der Administration anzeigen</label>
+            <helpText>Uses the global setting under All sales channels. Requires permission to clear caches and read system configuration. Reload the Administration after changing this setting.</helpText>
+            <helpText lang="en-GB">Uses the global setting under All sales channels. Requires permission to clear caches and read system configuration. Reload the Administration after changing this setting.</helpText>
+            <helpText lang="de-DE">Verwendet die globale Einstellung unter Alle Verkaufskanäle. Erfordert die Berechtigungen zum Leeren des Caches und Lesen der Systemkonfiguration. Nach Änderungen die Administration neu laden.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>adminThemeCompileButtonEnabled</name>
+            <label>Show theme compile button in the Administration</label>
+            <label lang="en-GB">Show theme compile button in the Administration</label>
+            <label lang="de-DE">Theme-Compile-Button in der Administration anzeigen</label>
+            <helpText>Global setting under All sales channels. Requires theme edit, theme read, sales channel read and system configuration read permissions. Reload the Administration after changing this setting.</helpText>
+            <helpText lang="en-GB">Global setting under All sales channels. Requires theme edit, theme read, sales channel read and system configuration read permissions. Reload the Administration after changing this setting.</helpText>
+            <helpText lang="de-DE">Globale Einstellung unter Alle Verkaufskanäle. Erfordert Rechte zum Bearbeiten und Lesen von Themes sowie zum Lesen von Verkaufskanälen und Systemkonfiguration. Nach Änderungen die Administration neu laden.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
         <input-field type="text">
             <name>adminBasePath</name>
             <label>Admin Base Path</label>

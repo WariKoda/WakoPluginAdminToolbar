@@ -18,9 +18,10 @@ From the Shopware root:
 bin/console plugin:refresh
 bin/console plugin:install --activate WakoPluginAdminToolbar
 bin/console cache:clear
-./bin/build-storefront.sh
-./bin/build-administration.sh
+SHOPWARE_PROJECT_ROOT=$(pwd) shopware-cli extension build custom/plugins/WakoPluginAdminToolbar
 ```
+
+`shopware-cli extension build` builds the Administration and Storefront assets of this plugin only. Do not use `./bin/build-administration.sh` or `./bin/build-storefront.sh` for plugin builds.
 
 Optional during development:
 
@@ -76,8 +77,7 @@ Please run at least these steps when relevant for your change:
 
 ```bash
 bin/console cache:clear
-./bin/build-storefront.sh
-./bin/build-administration.sh
+SHOPWARE_PROJECT_ROOT=$(pwd) shopware-cli extension build custom/plugins/WakoPluginAdminToolbar
 ```
 
 Please also verify manually:

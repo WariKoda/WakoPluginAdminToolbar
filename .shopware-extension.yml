@@ -1,0 +1,7 @@
+build:
+  zip:
+    pack:
+      excludes:
+        paths:
+          - src/Resources/app/administration/package-lock.json
+          - src/Resources/app/storefront/package-lock.json
