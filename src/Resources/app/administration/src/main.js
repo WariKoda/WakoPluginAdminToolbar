@@ -1,5 +1,6 @@
 import './acl';
 import './component/wako-admin-toolbar-plugin-config-hint';
+import './component/wako-admin-toolbar-theme-compile';
 import './extension/sw-admin-menu';
 import './extension/sw-page';
 import './module/wako-admin-toolbar-settings';

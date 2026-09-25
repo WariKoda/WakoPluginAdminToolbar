@@ -1,5 +1,6 @@
 import template from './sw-page.html.twig';
 import meteorTemplate from './sw-meteor-page.html.twig';
+import { loadAdminToolbarConfig } from '../../service/admin-toolbar-config';
 
 const { Component, Mixin } = Shopware;
 
@@ -41,7 +42,7 @@ const cacheButtonBehavior = {
             }
 
             try {
-                const values = await this.systemConfigApiService.getValues('WakoPluginAdminToolbar.config');
+                const values = await loadAdminToolbarConfig(this.systemConfigApiService);
                 this.wakoCacheButtonEnabled = values['WakoPluginAdminToolbar.config.adminCacheClearButtonEnabled'] ?? true;
             } catch {
                 this.wakoCacheButtonEnabled = false;

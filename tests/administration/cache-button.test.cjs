@@ -7,7 +7,11 @@ const vm = require('node:vm');
 const extensionPath = resolve(__dirname, '../../src/Resources/app/administration/src/extension/sw-page');
 const source = readFileSync(`${extensionPath}/index.js`, 'utf8')
     .replace("import template from './sw-page.html.twig';", "const template = 'sw-page';")
-    .replace("import meteorTemplate from './sw-meteor-page.html.twig';", "const meteorTemplate = 'sw-meteor-page';");
+    .replace("import meteorTemplate from './sw-meteor-page.html.twig';", "const meteorTemplate = 'sw-meteor-page';")
+    .replace(
+        "import { loadAdminToolbarConfig } from '../../service/admin-toolbar-config';",
+        "const loadAdminToolbarConfig = (service) => service.getValues('WakoPluginAdminToolbar.config');",
+    );
 const definitions = {};
 vm.runInNewContext(source, {
     Shopware: {
