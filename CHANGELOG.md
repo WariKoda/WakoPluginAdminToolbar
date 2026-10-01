@@ -1,3 +1,10 @@
+# 2.3.1
+
+* Fixed: The Administration logo link preserves Shopware's original logo and sidebar expand controls, including the redesigned shell in Shopware 6.7.15.0
+* Fixed: Users without system configuration or sales channel read permissions no longer trigger unauthorized requests when loading the logo link or personal toolbar settings
+* Changed: Unit tests prefer the installed Shopware project dependencies; `SHOPWARE_PROJECT_ROOT` can select a different compatibility test target
+* Added: Regression coverage for both Administration logo structures and restricted-user configuration loading
+
 # 2.3.0
 
 * Added: A cache clear button in the Administration page header clears all caches through Shopware's cache API. It requires `system:clear:cache` and can be turned off in the plugin configuration

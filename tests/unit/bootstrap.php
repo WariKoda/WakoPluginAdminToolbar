@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
+$projectRoot = getenv('SHOPWARE_PROJECT_ROOT');
 $autoloadCandidates = [
-    __DIR__ . '/../../vendor/autoload.php',
+    ...($projectRoot ? [$projectRoot . '/vendor/autoload.php'] : []),
     __DIR__ . '/../../../../../vendor/autoload.php',
+    __DIR__ . '/../../vendor/autoload.php',
 ];
 
 foreach ($autoloadCandidates as $autoload) {

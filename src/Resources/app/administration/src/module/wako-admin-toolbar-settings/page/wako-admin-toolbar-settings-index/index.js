@@ -196,6 +196,10 @@ Component.register('wako-admin-toolbar-settings-index', {
         },
 
         async loadPluginConfig() {
+            if (!this.acl.can('system_config:read')) {
+                return;
+            }
+
             try {
                 const values = await Shopware.Service('systemConfigApiService')
                     .getValues('WakoPluginAdminToolbar.config');
@@ -210,8 +214,8 @@ Component.register('wako-admin-toolbar-settings-index', {
                     showCustomerNumber: values['WakoPluginAdminToolbar.config.customerContextShowCustomerNumber'] ?? true,
                     showRules: values['WakoPluginAdminToolbar.config.customerContextShowRules'] ?? false,
                 };
-            } catch (error) {
-                // Missing system_config:read should not block the profile page; the backend still enforces config.
+            } catch {
+                // Configuration failures must not block personal preferences; the backend enforces config.
                 this.customerContextConfig = {
                     showEmail: false,
                     showCustomerNumber: true,

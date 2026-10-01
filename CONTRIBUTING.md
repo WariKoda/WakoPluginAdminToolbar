@@ -80,6 +80,16 @@ bin/console cache:clear
 SHOPWARE_PROJECT_ROOT=$(pwd) shopware-cli extension build custom/plugins/WakoPluginAdminToolbar
 ```
 
+From the plugin directory, run the automated checks:
+
+```bash
+composer test:unit
+npm ci --prefix tests/administration
+npm test --prefix tests/administration
+```
+
+PHP unit tests use the surrounding Shopware project's dependencies when available. Set `SHOPWARE_PROJECT_ROOT` to select a different test target, or to the plugin directory to test against its standalone `vendor/` dependencies. The Administration tests cover both the legacy CSS logo and the Shopware 6.7.15 icon/expand-button structure with Vue 3.5.22. If Chromium and compiled Core styles are available, they also check the actual Core markup, unchanged logo dimensions, keyboard focus, and sidebar expansion in a headless browser. These browser checks are otherwise skipped; `CHROMIUM_BIN` can select a different Chromium executable.
+
 Please also verify manually:
 
 - the toolbar is only visible for authorized and enabled admin users

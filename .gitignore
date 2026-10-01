@@ -4,7 +4,9 @@ meteor-kit-icons
 /src/Storefront/
 /src/Resources/app/administration/package-lock.json
 /src/Resources/app/storefront/package-lock.json
+/src/Resources/public/administration/**/*.map
 .phpunit.cache/
+/tests/administration/node_modules/
 .claude
 AUDIT.md
 docs/architecture

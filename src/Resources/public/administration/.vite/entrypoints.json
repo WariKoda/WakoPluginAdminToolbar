@@ -3,11 +3,11 @@
   "entryPoints": {
     "wako-plugin-admin-toolbar": {
       "css": [
-        "/bundles/wakopluginadmintoolbar/administration/assets/wako-plugin-admin-toolbar-x_3lko73.css"
+        "/bundles/wakopluginadmintoolbar/administration/assets/wako-plugin-admin-toolbar-CMuHKGd_.css"
       ],
       "dynamic": [],
       "js": [
-        "/bundles/wakopluginadmintoolbar/administration/assets/wako-plugin-admin-toolbar-CsZNt96m.js"
+        "/bundles/wakopluginadmintoolbar/administration/assets/wako-plugin-admin-toolbar-CP7leXk-.js"
       ],
       "legacy": false,
       "preload": []

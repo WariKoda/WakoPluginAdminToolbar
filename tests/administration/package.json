@@ -1,0 +1,11 @@
+{
+  "name": "wako-admin-toolbar-administration-tests",
+  "private": true,
+  "scripts": {
+    "test": "node --test *.test.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "vue": "3.5.22"
+  }
+}

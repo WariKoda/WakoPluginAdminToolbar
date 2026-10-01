@@ -1,5 +1,5 @@
-import template from "./sw-admin-menu.html.twig";
 import "./sw-admin-menu.scss";
+import { updateLogoLink } from "./logo-link.helper";
 import {
     getConfiguredSalesChannelId,
     isLogoStorefrontLinkEnabled,
@@ -10,9 +10,11 @@ const { Component } = Shopware;
 const { Criteria } = Shopware.Data;
 
 Component.override("sw-admin-menu", {
-    template,
-
     inject: {
+        acl: {
+            from: "acl",
+            default: null,
+        },
         repositoryFactory: {
             from: "repositoryFactory",
             default: null,
@@ -47,8 +49,39 @@ Component.override("sw-admin-menu", {
         this.loadStorefrontLink();
     },
 
+    watch: {
+        storefrontUrl() {
+            this.updateStorefrontLogoLink();
+        },
+    },
+
+    mounted() {
+        this.updateStorefrontLogoLink();
+    },
+
+    updated() {
+        this.updateStorefrontLogoLink();
+    },
+
+    beforeUnmount() {
+        this.updateStorefrontLogoLink(null);
+    },
+
     methods: {
+        updateStorefrontLogoLink(url = this.storefrontUrl) {
+            updateLogoLink(
+                this.$refs.swAdminMenu || this.$el,
+                url,
+                this.$t('wako-admin-toolbar.adminMenu.openStorefront'),
+            );
+        },
         async loadStorefrontLink() {
+            this.storefrontUrl = null;
+
+            if (!this.acl?.can("system_config:read") || !this.acl.can("sales_channel:read")) {
+                return;
+            }
+
             try {
                 const systemConfigApiService =
                     this.systemConfigApiService ||
